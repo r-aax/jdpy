@@ -7,6 +7,7 @@ Created on Tue Jun 12 23:03:54 2018
 
 from utils import lists, strings
 from functools import reduce
+import numpy as np
 
 class money:
     """
@@ -17,6 +18,7 @@ class money:
     hundred = 100       # Alias for 100.
     digits_in_group = 3 # Digits count in group when number represented 
                         # as "1 000 000" (three digits in this case).
+    delim = " "         # Delimiter for parts of numerical value.
     
 #-------------------------------------------------------------------------------   
     
@@ -34,7 +36,7 @@ class money:
         elif type(v) is str:
             # It it is string we must delete all spaces, 
             # because we want to process strings like "1 000 000.00".
-            self.init_f(float(v.replace(" ", "")))
+            self.init_f(float(v.replace(money.delim, "")))
         else:
             raise ValueError("Wrong money type.")
         
@@ -53,7 +55,7 @@ class money:
             raise ValueError("Wrong money value.")
             
         # Store money value multiplied on 100 (in kopecks, cents, etc.).
-        self.amount = round(v * money.hundred)        
+        self.amount = int(round(v * money.hundred))
         
 #-------------------------------------------------------------------------------   
 
@@ -90,7 +92,7 @@ class money:
         """
         
         chopped = strings.chop(str(self.hi()), -3)
-        merged = lists.merge(chopped, [" "] * (len(chopped) - 1))
+        merged = lists.merge(chopped, [money.delim] * (len(chopped) - 1))
         return reduce(lambda a, b: a + b, merged)
                     
 #-------------------------------------------------------------------------------   
@@ -124,6 +126,75 @@ class money:
             String representation.
         """
 
+        # Check for type.
+        if not (type(self.amount) is int):
+            raise TypeError("Money amount must be stored as integer.")
+
         return self.hi_str() + "." + self.lo_str()
+
+#-------------------------------------------------------------------------------
+        
+    def distribute(self, ks):
+        """
+        Distribute money value between len(ks) money objects according
+        with given coefficients.
+        
+        Arguments:
+            ks -- numpy array of coefficients.
+        
+        Result:
+            Distributed money (numpy array).
+        """
+    
+        # Count of coefficients.
+        n = len(ks)
+        
+        if n == 0:
+            # No distribution.
+            raise ValueError("No factors for distribute money.")
+        
+        if n == 1:
+            # Only one factor.
+            return self
+        
+        # First normalize list.
+        nks = lists.normalize(ks)
+        
+        # Create array for new moneys.
+        ms = [0] * n
+        
+        # Cycle of initialization array of amounts for new moneys.
+        rest = self.amount
+        for i in range(n - 1):
+            am = int(round(self.amount * nks[i]))
+            rest -= am
+            ms[i] = money(0.0)
+            ms[i].amount = am
+            
+        # The last element calculate from rest.
+        ms[n - 1] = money(0.0)
+        ms[n - 1].amount = rest
+        
+        # Create money objects.
+        return ms
+    
+#-------------------------------------------------------------------------------
+        
+    def split(self, k):
+        """
+        Split money.
+        
+        Arguments:
+            k -- split value (from 0.0 to 1.0).
+
+        Result:
+            Tuple of splitted values.
+        """
+        
+        if (k < 0.0) or (k > 1.0):
+            # Check split factor.
+            raise ValueError("Split factor must be in [0.0, 1.0] segment.")
+
+        return self.distribute(np.array([k, 1.0 - k]))
 
 #-------------------------------------------------------------------------------
