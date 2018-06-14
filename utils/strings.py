@@ -5,13 +5,13 @@ Created on Wed Jun 13 13:25:42 2018
 @author: Rybakov
 """
 
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 def chop(s, size = 1):
     """
     Chop string.
     
-    Keyword arguments:
+    Arguments:
         s -- string,
         size -- chop size (if size is positive then the string is chopped
                 from the beginning to its end, if size is negative then the
@@ -43,4 +43,4 @@ def chop(s, size = 1):
         # Chop size must not be zero.
         raise ValueError("Zero chop size.")
         
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
