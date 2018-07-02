@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jun 12 23:03:54 2018
+Ecomonic functionality.
+
+Created on Mon Jul  2 15:45:53 2018
 
 @author: Rybakov
 """
 
-from utils import lists, strings
+import utils as ut
 from functools import reduce
 import numpy as np
+
+
+#-------------------------------------------------------------------------------
+# Class smart money.
+#-------------------------------------------------------------------------------
 
 class money:
     """
@@ -19,10 +26,11 @@ class money:
     digits_in_group = 3 # Digits count in group when number represented 
                         # as "1 000 000" (three digits in this case).
     delim = " "         # Delimiter for parts of numerical value.
+    vat = 0.18          # VAT value.
     
-#-------------------------------------------------------------------------------   
+#-------------------------------------------------------------------------------    
     
-    def __init__(self, v):
+    def __init__(self, v, is_vat = False):
         """
         Constructor from value (float or string).
         
@@ -30,6 +38,10 @@ class money:
             v -- value.
         """
         
+        # Process VAT flag.
+        self.is_vat = is_vat
+        
+        # Process value.
         if type(v) is float:
             # Just float value.
             self.init_f(v)
@@ -40,7 +52,7 @@ class money:
         else:
             raise ValueError("Wrong money type.")
         
-#-------------------------------------------------------------------------------   
+#-------------------------------------------------------------------------------
 
     def init_f(self, v):
         """
@@ -57,7 +69,7 @@ class money:
         # Store money value multiplied on 100 (in kopecks, cents, etc.).
         self.amount = int(round(v * money.hundred))
         
-#-------------------------------------------------------------------------------   
+#-------------------------------------------------------------------------------
 
     def hi(self):
         """
@@ -69,7 +81,7 @@ class money:
         
         return self.amount // money.hundred
     
-#-------------------------------------------------------------------------------   
+#-------------------------------------------------------------------------------
 
     def lo(self):
         """
@@ -81,7 +93,7 @@ class money:
         
         return self.amount % money.hundred
     
-#-------------------------------------------------------------------------------   
+#-------------------------------------------------------------------------------
 
     def hi_str(self):
         """
@@ -91,11 +103,11 @@ class money:
             High part string representation.
         """
         
-        chopped = strings.chop(str(self.hi()), -3)
-        merged = lists.merge(chopped, [money.delim] * (len(chopped) - 1))
+        chopped = ut.str_chop(str(self.hi()), -3)
+        merged = ut.li_merge(chopped, [money.delim] * (len(chopped) - 1))
         return reduce(lambda a, b: a + b, merged)
                     
-#-------------------------------------------------------------------------------   
+#-------------------------------------------------------------------------------
 
     def lo_str(self):
         """
@@ -116,7 +128,7 @@ class money:
         else:
             raise ValueError("Wrong money low value.")
 
-#-------------------------------------------------------------------------------   
+#-------------------------------------------------------------------------------
 
     def __repr__(self):
         """
@@ -158,7 +170,7 @@ class money:
             return self
         
         # First normalize list.
-        nks = lists.normalize(ks)
+        nks = ut.li_norm(ks)
         
         # Create array for new moneys.
         ms = [0] * n
@@ -197,4 +209,37 @@ class money:
 
         return self.distribute(np.array([k, 1.0 - k]))
 
+#-------------------------------------------------------------------------------
+
+    def add_vat(self):
+        """
+        Add VAT to amount.
+        """
+        
+        # It is possible to add VAT only once.
+        if self.is_vat:
+            raise RuntimeError("Re-charging VAT.")
+        
+        # Charge VAT.
+        self.amount = int(round((self.amount * (1.0 + self.vat))))
+        self.is_vat = True
+
+#-------------------------------------------------------------------------------
+        
+    def sub_vat(self):
+        """
+        Sub VAT from amount.
+        """
+        
+        # It is possible to sub VAT only once.
+        if not self.is_vat:
+            raise RuntimeError("Re-extraction VAT.")
+        
+        # Extract VAT.
+        self.amount = int(round(self.amount / (1.0 + self.vat)))
+        self.is_vat = False
+        
+#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
