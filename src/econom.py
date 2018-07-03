@@ -62,10 +62,6 @@ class money:
             v -- value.
         """
         
-        if v < 0.0:
-            # Negative money values are not supported.
-            raise ValueError("Wrong money value.")
-            
         # Store money value multiplied on 100 (in kopecks, cents, etc.).
         self.amount = int(round(v * money.hundred))
 
@@ -98,7 +94,10 @@ class money:
             High part of money.
         """
         
-        return self.amount // money.hundred
+        if self.amount < 0:
+            return -((-self.amount) // money.hundred)
+        else:
+            return self.amount // money.hundred
     
 #-------------------------------------------------------------------------------
 
@@ -110,7 +109,10 @@ class money:
             Low part of money.
         """
         
-        return self.amount % money.hundred
+        if self.amount < 0:
+            return (-self.amount) % money.hundred
+        else:
+            return self.amount % money.hundred
     
 #-------------------------------------------------------------------------------
 
@@ -122,9 +124,17 @@ class money:
             High part string representation.
         """
         
-        chopped = ut.str_chop(str(self.hi()), -3)
+        # Sign.
+        hi = self.hi()
+        sign = "-" if hi < 0 else ""
+        
+        # Take absulute value.
+        if hi < 0:
+            hi = -hi
+        
+        chopped = ut.str_chop(str(hi), -3)
         merged = ut.li_merge(chopped, [money.delim] * (len(chopped) - 1))
-        return reduce(lambda a, b: a + b, merged)
+        return sign + reduce(lambda a, b: a + b, merged)
                     
 #-------------------------------------------------------------------------------
 
