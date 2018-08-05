@@ -16,7 +16,7 @@ import numpy as np
 # Class smart money.
 #-------------------------------------------------------------------------------
 
-class money:
+class Money:
     """
     Peace of money for financial manipulations.
     """
@@ -27,7 +27,7 @@ class money:
                         # as "1 000 000" (three digits in this case).
     delim = " "         # Delimiter for parts of numerical value.
     vat = 0.18          # VAT value.
-    is_vat_ctrl = False # Control correct VAT processing.
+    is_ctrl_vat = False # Control correct VAT processing.
     
 #-------------------------------------------------------------------------------    
     
@@ -41,16 +41,16 @@ class money:
         """
         
         # Process VAT flag.
-        self.is_vat = is_vat
+        self.IsVAT = is_vat
         
         # Process value.
         if type(v) is float:
             # Just float value.
-            self.init_f(v)
+            self.InitF(v)
         elif type(v) is str:
             # If it is string we must delete all spaces, 
             # because we want to process strings like "1 000 000.00".
-            self.init_f(float(v.replace(money.delim, "")))
+            self.InitF(float(v.replace(Money.delim, "")))
         else:
             raise ValueError("Wrong money type.")
         
@@ -65,7 +65,7 @@ class money:
         """
         
         # Store money value multiplied on 100 (in kopecks, cents, etc.).
-        self.amount = int(round(v * money.hundred))
+        self.Amount = int(round(v * Money.hundred))
 
 #-------------------------------------------------------------------------------
 
@@ -81,7 +81,7 @@ class money:
             New money value.
         """
         
-        m = money()
+        m = Money()
         m.amount = a
         m.is_vat = is_vat
         return m
@@ -97,9 +97,9 @@ class money:
         """
         
         if self.amount < 0:
-            return -((-self.amount) // money.hundred)
+            return -((-self.amount) // Money.hundred)
         else:
-            return self.amount // money.hundred
+            return self.amount // Money.hundred
     
 #-------------------------------------------------------------------------------
 
@@ -112,9 +112,9 @@ class money:
         """
         
         if self.amount < 0:
-            return (-self.amount) % money.hundred
+            return (-self.amount) % Money.hundred
         else:
-            return self.amount % money.hundred
+            return self.amount % Money.hundred
     
 #-------------------------------------------------------------------------------
 
@@ -135,7 +135,7 @@ class money:
             hi = -hi
         
         chopped = ut.str_chop(str(hi), -3)
-        merged = ut.li_merge(chopped, [money.delim] * (len(chopped) - 1))
+        merged = ut.li_merge(chopped, [Money.delim] * (len(chopped) - 1))
         return sign + reduce(lambda a, b: a + b, merged)
                     
 #-------------------------------------------------------------------------------
@@ -214,10 +214,10 @@ class money:
         for i in range(n - 1):
             am = int(round(self.amount * nks[i]))
             rest -= am
-            ms[i] = money.from_amount(am, self.is_vat)
+            ms[i] = Money.from_amount(am, self.is_vat)
             
         # The last element calculate from rest.
-        ms[n - 1] = money.from_amount(rest, self.is_vat)
+        ms[n - 1] = Money.from_amount(rest, self.is_vat)
         
         # Create money objects.
         return ms
@@ -257,7 +257,7 @@ class money:
                 raise RuntimeError("Re-charging VAT.")
         
         # Charge VAT.
-        self.amount = int(round((self.amount * (1.0 + money.vat))))
+        self.amount = int(round((self.amount * (1.0 + Money.vat))))
         self.is_vat = True
         
         return self
@@ -273,12 +273,12 @@ class money:
         """
         
         # It is possible to sub VAT only once.
-        if self.is_vat_ctrl:
+        if self.is_ctrl_vat:
             if not self.is_vat:
                 raise RuntimeError("Re-extraction VAT.")
         
         # Extract VAT.
-        self.amount = int(round(self.amount / (1.0 + money.vat)))
+        self.amount = int(round(self.amount / (1.0 + Money.vat)))
         self.is_vat = False
         
         return self
@@ -296,11 +296,11 @@ class money:
             New money value.
         """
 
-        if self.is_vat_ctrl:            
+        if self.is_ctrl_vat:            
             if self.is_vat != y.is_vat:
                 raise RuntimeError("VAT flags for added values must be equal.")
                 
-        return money.from_amount(self.amount + y.amount, self.is_vat)
+        return Money.from_amount(self.amount + y.amount, self.is_vat)
         
 #-------------------------------------------------------------------------------
         
@@ -315,11 +315,11 @@ class money:
             New money value.
         """
 
-        if self.is_vat_ctrl:        
+        if self.is_ctrl_vat:        
             if self.is_vat != y.is_vat:
                 raise RuntimeError("VAT flags for sub valus must be equal.")
             
-        return money.from_amount(self.amount - y.amount, self.is_vat)
+        return Money.from_amount(self.amount - y.amount, self.is_vat)
     
 #-------------------------------------------------------------------------------
         
@@ -334,29 +334,31 @@ class money:
             New money value.
         """
         
-        return money.from_amount(int(round(self.amount * y)), self.is_vat)
+        return Money.from_amount(int(round(self.amount * y)), self.is_vat)
             
 #-------------------------------------------------------------------------------
 # Calculation tree.
 #-------------------------------------------------------------------------------
 
-class calc_tree:
+class CalcTree:
     """
     Calculation tree accumulating money.
     """
     
 #-------------------------------------------------------------------------------
 
-    def __init__(self, s):
+    def __init__(self, sname, name):
         """
         Constructor.
         
         Arguments:
-            str -- string (node name).
+            sname -- short name,
+            name -- name.
         """
         
         # Init by defaul.
-        self.name = s
+        self.sname = sname
+        self.name = name
         self.children = []
         self.money = []
 
@@ -378,7 +380,7 @@ class calc_tree:
         return ch
 
 #-------------------------------------------------------------------------------
-        
+            
     def add_money(self, m):
         """
         Add money.
@@ -405,6 +407,32 @@ class calc_tree:
 
 #-------------------------------------------------------------------------------
 
+    def find_node(self, sname):
+        """
+        Find node by string.
+        
+        Arguments:
+            s -- short name.
+            
+        Result:
+            Node found or None.
+        """
+
+        # Node is found.
+        if self.sname == sname:
+            return self
+        
+        # Find through all children nodes.
+        for ch in self.children:
+            r = ch.find_node(sname)
+            if r != None:
+                return r
+        
+        # Nothing is found.
+        return None
+
+#-------------------------------------------------------------------------------
+
     def value(self):
         """
         Get node value.
@@ -413,7 +441,7 @@ class calc_tree:
             Value of the node.
         """
         
-        return reduce(lambda x, y: x + y, self.money, money());
+        return reduce(lambda x, y: x + y, self.money, Money());
 
 #-------------------------------------------------------------------------------
 
@@ -423,7 +451,7 @@ class calc_tree:
         """
     
         if not self.is_list():
-            m = money()
+            m = Money()
             for ch in self.children:
                 ch.calculate()
                 m = m + ch.value()
@@ -446,7 +474,7 @@ class calc_tree:
             indent_string = "    " * (indent - 1) + "|--->"         
         
         # Prepare category name.
-        cat_name = indent_string + " " + self.name
+        cat_name = indent_string + " " + self.sname + " " + self.name
         
         # Print node as list.
         print("%-96s | %18s" % (cat_name, str(self.value())))
@@ -459,7 +487,7 @@ class calc_tree:
 # Person.
 #-------------------------------------------------------------------------------
          
-class person:
+class Person:
     """
     Person with salary and vacation days.
     """
@@ -503,8 +531,8 @@ class person:
             Year additional salary.
         """
         
-        k = (1.0 / person.months) \
-            * (1.0 / person.mean_days_in_month) \
+        k = (1.0 / Person.months) \
+            * (1.0 / Person.mean_days_in_month) \
             * self.vaction
         return self.year_salary_full() * k
 
@@ -527,7 +555,7 @@ class person:
         Print information about person.
         """
         
-        print("    person : salary = %16s (%16s + %16s), vacation = %2d" \
+        print("    Person : salary = %16s (%16s + %16s), vacation = %2d" \
               % (str(self.year_salary_full()),
                  str(self.year_salary_main()),
                  str(self.year_salary_add()),
@@ -537,7 +565,7 @@ class person:
 # Persons group.
 #-------------------------------------------------------------------------------
 
-class persons_group:
+class PersonsGroup:
     """
     Group of persons.
     """
@@ -585,7 +613,7 @@ class persons_group:
             Year full salary.
         """
         
-        s = money()
+        s = Money()
         
         for person in self.persons:
             s = s + person.year_salary_full()
@@ -602,7 +630,7 @@ class persons_group:
             Year adiitional salary.
         """
         
-        s = money()
+        s = Money()
         
         for person in self.persons:
             s = s + person.year_salary_add()
