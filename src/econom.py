@@ -27,15 +27,17 @@ class money:
                         # as "1 000 000" (three digits in this case).
     delim = " "         # Delimiter for parts of numerical value.
     vat = 0.18          # VAT value.
+    is_vat_ctrl = False # Control correct VAT processing.
     
 #-------------------------------------------------------------------------------    
     
-    def __init__(self, v, is_vat = False):
+    def __init__(self, v = 0.0, is_vat = False):
         """
         Constructor from value (float or string).
         
         Arguments:
-            v -- value.
+            v -- value,
+            is_vat -- set initial VAT or not.
         """
         
         # Process VAT flag.
@@ -46,7 +48,7 @@ class money:
             # Just float value.
             self.init_f(v)
         elif type(v) is str:
-            # It it is string we must delete all spaces, 
+            # If it is string we must delete all spaces, 
             # because we want to process strings like "1 000 000.00".
             self.init_f(float(v.replace(money.delim, "")))
         else:
@@ -79,7 +81,7 @@ class money:
             New money value.
         """
         
-        m = money(0.0)
+        m = money()
         m.amount = a
         m.is_vat = is_vat
         return m
@@ -250,8 +252,9 @@ class money:
         """
         
         # It is possible to add VAT only once.
-        if self.is_vat:
-            raise RuntimeError("Re-charging VAT.")
+        if self.is_vat_ctrl:
+            if self.is_vat:
+                raise RuntimeError("Re-charging VAT.")
         
         # Charge VAT.
         self.amount = int(round((self.amount * (1.0 + money.vat))))
@@ -270,8 +273,9 @@ class money:
         """
         
         # It is possible to sub VAT only once.
-        if not self.is_vat:
-            raise RuntimeError("Re-extraction VAT.")
+        if self.is_vat_ctrl:
+            if not self.is_vat:
+                raise RuntimeError("Re-extraction VAT.")
         
         # Extract VAT.
         self.amount = int(round(self.amount / (1.0 + money.vat)))
@@ -291,9 +295,10 @@ class money:
         Result:
             New money value.
         """
-            
-        if self.is_vat != y.is_vat:
-            raise RuntimeError("VAT flags for added values must be equal.")
+
+        if self.is_vat_ctrl:            
+            if self.is_vat != y.is_vat:
+                raise RuntimeError("VAT flags for added values must be equal.")
                 
         return money.from_amount(self.amount + y.amount, self.is_vat)
         
@@ -309,9 +314,10 @@ class money:
         Result:
             New money value.
         """
-        
-        if self.is_vat != y.is_vat:
-            raise RuntimeError("VAT flags for sub valus must be equal.")
+
+        if self.is_vat_ctrl:        
+            if self.is_vat != y.is_vat:
+                raise RuntimeError("VAT flags for sub valus must be equal.")
             
         return money.from_amount(self.amount - y.amount, self.is_vat)
     
@@ -362,6 +368,9 @@ class calc_tree:
         
         Arguments:
             ch -- new child.
+            
+        Result:
+            New child.
         """
         
         # Add to the list.
@@ -404,10 +413,21 @@ class calc_tree:
             Value of the node.
         """
         
-        v = money(0.0)
-        for s in self.money:
-            v = v + s
-        return v
+        return reduce(lambda x, y: x + y, self.money, money());
+
+#-------------------------------------------------------------------------------
+
+    def calculate(self):
+        """
+        Calculate money for all nodes in the tree.
+        """
+    
+        if not self.is_list():
+            m = money()
+            for ch in self.children:
+                ch.calculate()
+                m = m + ch.value()
+            self.money = [m]
 
 #-------------------------------------------------------------------------------
         
@@ -436,7 +456,7 @@ class calc_tree:
             
         
 #-------------------------------------------------------------------------------
-# Perdson.
+# Person.
 #-------------------------------------------------------------------------------
          
 class person:
@@ -485,7 +505,7 @@ class person:
         
         k = (1.0 / person.months) \
             * (1.0 / person.mean_days_in_month) \
-            * (self.vaction)
+            * self.vaction
         return self.year_salary_full() * k
 
 #-------------------------------------------------------------------------------
@@ -507,7 +527,7 @@ class person:
         Print information about person.
         """
         
-        print("    person : salary = %16s (%16s + %16s)), vacation = %2d" \
+        print("    person : salary = %16s (%16s + %16s), vacation = %2d" \
               % (str(self.year_salary_full()),
                  str(self.year_salary_main()),
                  str(self.year_salary_add()),
@@ -565,7 +585,7 @@ class persons_group:
             Year full salary.
         """
         
-        s = money(0.0)
+        s = money()
         
         for person in self.persons:
             s = s + person.year_salary_full()
@@ -582,7 +602,7 @@ class persons_group:
             Year adiitional salary.
         """
         
-        s = money(0.0)
+        s = money()
         
         for person in self.persons:
             s = s + person.year_salary_add()
@@ -619,7 +639,7 @@ class persons_group:
         full = self.year_salary_full()
             
         if full.amount != 0:
-            print("Total : salary = %17s (%17s + %17s)), perc = %2.2f%%" \
+            print("Total : salary = %17s (%17s + %17s), perc = %2.2f%%" \
                   % (str(full),
                      str(main),
                      str(add),

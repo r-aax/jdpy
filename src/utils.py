@@ -37,8 +37,7 @@ def li_merge(a, b):
         return a
 
     # Both lists are non empty.
-    h = [a[0], b[0]]
-    return h + li_merge(a[1 :], b[1 :])
+    return [a[0], b[0]] + li_merge(a[1 :], b[1 :])
 
 #-------------------------------------------------------------------------------
 # Numpy arrays (names start with npa_*).    
@@ -54,9 +53,8 @@ def npa_norm(a):
     Result:
         Normalized array.
     """
-    
-    s = sum(a)
-    return a / s
+
+    return a / sum(a)
 
 #-------------------------------------------------------------------------------
 # Strings (names start with str_*).
@@ -77,7 +75,7 @@ def str_chop(s, size = 1):
     
     Examples:
         chop("123456789", 4) -> ["1234", "5678", "9"]
-        chop("123456789", -4) -> ["1", "2345", "6789'"]
+        chop("123456789", -4) -> ["1", "2345", "6789"]
     """
     
     if len(s) <= abs(size):
@@ -99,3 +97,17 @@ def str_chop(s, size = 1):
         raise ValueError("Zero chop size.")
         
 #-------------------------------------------------------------------------------
+# Tests.
+#-------------------------------------------------------------------------------
+
+if __name__ == "__main__":
+    assert li_merge([1, 1], [2, 2]) == [1, 2, 1, 2], "li_merge fault"
+    assert li_merge([1], [2, 2, 2]) == [1, 2, 2, 2], "li_merge fault"
+    assert li_merge([1, 1, 1], [2]) == [1, 2, 1, 1], "li_merge fault"
+    #
+    assert str_chop("123456789", 4) == ["1234", "5678", "9"], "str_chop fault"
+    assert str_chop("123456789", -4) == ["1", "2345", "6789"], "str_chop fault"
+
+#-------------------------------------------------------------------------------
+        
+    
