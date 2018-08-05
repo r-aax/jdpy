@@ -347,7 +347,7 @@ class CalcTree:
     
 #-------------------------------------------------------------------------------
 
-    def __init__(self, sname, name):
+    def __init__(self, sname, name = ""):
         """
         Constructor.
         
@@ -483,6 +483,124 @@ class CalcTree:
                 ch.print(indent + 1)
             
         
+#-------------------------------------------------------------------------------
+
+    def tree_640():
+        """
+        Construct tree according to 640-th order.
+        
+        Result:
+            Tree.
+        """
+        
+        t = CalcTree("root")
+
+        n_prjam = t.add_child(CalcTree("Прямые затраты"))
+        n_prjam.add_child(CalcTree("ОТ1"))
+        n_prjam.add_child(CalcTree("МЗ"))
+        n_prjam.add_child(CalcTree("АМ1"))
+        n_prjam.add_child(CalcTree("ИНЗ"))
+
+        n_obsh = t.add_child(CalcTree("Общехозяйственные затраты"))
+        n_obsh.add_child(CalcTree("КУ"))
+        n_obsh.add_child(CalcTree("СНИ"))
+        n_obsh.add_child(CalcTree("СОЦДИ"))
+        n_obsh.add_child(CalcTree("АМ2"))
+        n_obsh.add_child(CalcTree("УС"))
+        n_obsh.add_child(CalcTree("ТУ"))
+        n_obsh.add_child(CalcTree("ОТ2"))
+        n_obsh.add_child(CalcTree("ПНЗ"))
+
+        return t;
+        
+#-------------------------------------------------------------------------------
+        
+    def tree_200():
+        """
+        Construct tree according to 200-th order.
+        
+        Result:
+            Tree.
+        """
+        
+        t = CalcTree("root")
+
+        # 01
+        n01 = t.add_child(CalcTree("01", "Затраты на материалы - всего"))
+        n01.add_child(CalcTree("02", "сырье и основные материалы"))
+        n01.add_child(CalcTree("03", "вспомогательные материалы"))
+        n01.add_child(CalcTree("04", "покупные полуфабрикаты"))
+        n01.add_child(CalcTree("05", "возвратные отходы (вычитаются)"))
+        n01.add_child(CalcTree("06", "комплектующие изделия"))
+        n01.add_child(CalcTree("07", "работы и услуги сторонних организаций производственного характера"))
+        n01.add_child(CalcTree("08", "транспортно-заготовительные расходы"))
+        n01.add_child(CalcTree("09", "топливо на технологические цели"))
+        n01.add_child(CalcTree("10", "энергия на технологические цели"))
+        n01.add_child(CalcTree("11", "тара (невозвратная) и упаковка"))
+
+        # 12
+        n12 = t.add_child(CalcTree("12", "Затраты на оплату труда основных производственных рабочих - всего"))
+        n12.add_child(CalcTree("13", "основная заработная плата"))
+        n12.add_child(CalcTree("14", "дополнительная заработная плата"))
+        
+        # 15
+        t.add_child(CalcTree("15", "Страховые взносы на обязательное социальное страхование"))
+
+        # 16
+        n16 = t.add_child(CalcTree("16", "Затраты на подготовку и освоение производства - всего"))
+        n16.add_child(CalcTree("17", "затраты на подготовку и освоение новых производств, цехов и агрегатов (пусковые расходы)"))
+        n16.add_child(CalcTree("18", "затраты на подготовку и освоение новых видов продукции и новых технологических процессов"))
+
+        # Other.
+        t.add_child(CalcTree("19", "Затраты на специальную технологическую оснастку"))
+        t.add_child(CalcTree("20", "Специальные затраты"))
+        t.add_child(CalcTree("21", "Общепроизводственные затраты"))
+        t.add_child(CalcTree("22", "Общехозяйственные затраты"))
+        t.add_child(CalcTree("23", "Прочие производственные затраты"))
+
+        return t;        
+    
+#-------------------------------------------------------------------------------
+        
+    def tree_640_200():
+        """
+        Construct tree according to 640-th order with special
+        positions from 200-th order.
+        
+        Result:
+            Tree.
+        """
+        
+        t = CalcTree("root")
+
+        n_prjam = t.add_child(CalcTree("Прямые затраты"))
+        n_OT1 = n_prjam.add_child(CalcTree("ОТ1"))
+        n_OT1.add_child(CalcTree("ОТ1О"))
+        n_OT1.add_child(CalcTree("ОТ1Д"))
+        n_OT1.add_child(CalcTree("ОТ1С"))
+        n_MZ = n_prjam.add_child(CalcTree("МЗ"))
+        n_MZ.add_child(CalcTree("МЗЭ"))
+        n_prjam.add_child(CalcTree("АМ1"))
+        n_INZ = n_prjam.add_child(CalcTree("ИНЗ"))
+        n_INZO = n_INZ.add_child(CalcTree("ИНЗО"))
+        n_INZO.add_child(CalcTree("ИНЗОВ"))
+        n_INZO.add_child(CalcTree("ИНЗОХ"))
+        n_INZO.add_child(CalcTree("ИНЗОИ"))
+        n_INZO.add_child(CalcTree("ИНЗОТ"))
+        n_INZO.add_child(CalcTree("ИНЗОС"))
+
+        n_obsh = t.add_child(CalcTree("Общехозяйственные затраты"))
+        n_obsh.add_child(CalcTree("КУ"))
+        n_obsh.add_child(CalcTree("СНИ"))
+        n_obsh.add_child(CalcTree("СОЦДИ"))
+        n_obsh.add_child(CalcTree("АМ2"))
+        n_obsh.add_child(CalcTree("УС"))
+        n_obsh.add_child(CalcTree("ТУ"))
+        n_obsh.add_child(CalcTree("ОТ2"))
+        n_obsh.add_child(CalcTree("ПНЗ"))
+        
+        return t;
+            
 #-------------------------------------------------------------------------------
 # Person.
 #-------------------------------------------------------------------------------
