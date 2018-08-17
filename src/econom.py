@@ -41,16 +41,16 @@ class Money:
         """
         
         # Process VAT flag.
-        self.IsVAT = is_vat
+        self.is_vat = is_vat
         
         # Process value.
         if type(v) is float:
             # Just float value.
-            self.InitF(v)
+            self.init_f(v)
         elif type(v) is str:
             # If it is string we must delete all spaces, 
             # because we want to process strings like "1 000 000.00".
-            self.InitF(float(v.replace(Money.delim, "")))
+            self.init_f(float(v.replace(Money.delim, "")))
         else:
             raise ValueError("Wrong money type.")
         
@@ -65,7 +65,7 @@ class Money:
         """
         
         # Store money value multiplied on 100 (in kopecks, cents, etc.).
-        self.Amount = int(round(v * Money.hundred))
+        self.amount = int(round(v * Money.hundred))
 
 #-------------------------------------------------------------------------------
 
@@ -477,7 +477,7 @@ class CalcTree:
         cat_name = indent_string + " " + self.sname + " " + self.name
         
         # Print node as list.
-        print("%-96s | %18s" % (cat_name, str(self.value())))
+        print("%-101s | %18s" % (cat_name, str(self.value())))
         if not self.is_list():
             for ch in self.children:
                 ch.print(indent + 1)
@@ -493,7 +493,7 @@ class CalcTree:
             Tree.
         """
         
-        t = CalcTree("root")
+        t = CalcTree("root 640")
 
         n_prjam = t.add_child(CalcTree("Прямые затраты"))
         n_prjam.add_child(CalcTree("ОТ1"))
@@ -523,7 +523,7 @@ class CalcTree:
             Tree.
         """
         
-        t = CalcTree("root")
+        t = CalcTree("root 200")
 
         # 01
         n01 = t.add_child(CalcTree("01", "Затраты на материалы - всего"))
@@ -571,7 +571,7 @@ class CalcTree:
             Tree.
         """
         
-        t = CalcTree("root")
+        t = CalcTree("root 640/200")
 
         n_prjam = t.add_child(CalcTree("Прямые затраты"))
         n_OT1 = n_prjam.add_child(CalcTree("ОТ1"))
@@ -637,7 +637,7 @@ class Person:
             Year salary.
         """
         
-        return self.salary * person.months
+        return self.salary * Person.months
     
 #-------------------------------------------------------------------------------
 
@@ -792,6 +792,195 @@ class PersonsGroup:
                      100.0 * add.amount / main.amount))            
 
 #-------------------------------------------------------------------------------
+# Microprocessor.
+#-------------------------------------------------------------------------------
+            
+class Microprocessor:
+    """
+    Microprocessor.
+    """            
+    
+#-------------------------------------------------------------------------------
 
+    def __init__(self, name, cores, freq, tfs):
+        """
+        Constructor.
+        
+        Arguments:
+            name -- name,
+            cores -- cores count,
+            freq -- frequency (GHz),
+            tfs -- peak performance (TFLOPS).
+        """
+        
+        self.name = name
+        self.cores = cores
+        self.freq = freq
+        self.tfs = tfs
+    
+#-------------------------------------------------------------------------------
 
+    def __repr__(self):
+        """
+        String representation.
+        
+        Result:
+            String.
+        """
+        
+        return self.name \
+               + " (cores = " + str(self.cores) \
+               + ", freq = " + str(self.freq) \
+               + ", tfs = " + str(self.tfs) + ")"
 
+#-------------------------------------------------------------------------------
+
+    def HT():
+        """
+        Harpertown microprocessor (Intel Xeon E5450).
+        
+        Result:
+            Harpertown microprocessor.
+        """
+        
+        return Microprocessor("Harpertown",
+                              cores = 4,
+                              freq = 3.0,
+                              tfs = 0.048)
+
+#-------------------------------------------------------------------------------
+
+    def IB():
+        """
+        Ivy Bridge microprocessor (Intel Xeon E5-2667).
+        
+        Result:
+            Ivy Bridge microprocessor.
+        """
+        
+        return Microprocessor("Ivy Bridge",
+                              cores = 8,
+                              freq = 3.3, 
+                              tfs = 0.2112)
+
+#-------------------------------------------------------------------------------
+
+    def KNC_ps():
+        """
+        Knights Corner microprocessor in Petastream (Intel Xeon Phi 7120D).
+        
+        Result:
+            Knights Corner microprocessor.
+        """
+        
+        return Microprocesssor("KNC Petastream",
+                               cores = 61,
+                               freq = 1.238,
+                               tfs = 1.208)
+
+#-------------------------------------------------------------------------------
+
+    def SB():
+        """
+        Sandy Bridge microprocessor (Intel Xeon E5-2690).
+        
+        Result:
+            Sandy Bridge microprocessor.
+        """
+        
+        return Microprocessor("Sandy Bridge",
+                              cores = 8,
+                              freq = 2.9,
+                              tfs = 0.1856)
+
+#-------------------------------------------------------------------------------
+
+    def KNC_tr():
+        """
+        Knights Corner microprocessor in Tornado (Intel Xeon Phi 7110X).
+        
+        Result:
+            Knights Corner microprocessor.
+        """
+        
+        return Microprocessor("KNC Tornado",
+                              cores = 61,
+                              freq = 1.1,
+                              tfs = 1.0736)
+
+#-------------------------------------------------------------------------------
+
+    def HW():
+        """
+        Haswell microprocessor (Intel Xeon E5-2697v3).
+        
+        Result:
+            Haswell microprocessor.
+        """
+        
+        return Microprocessor("Haswell",
+                              cores = 14,
+                              freq = 2.6,
+                              tfs = 0.5824)
+
+#-------------------------------------------------------------------------------
+
+    def BW():
+        """
+        Broadwell microprocessor (Intel Xeon E5-2697Av4).
+        
+        Result:
+            Broadwell microprocessor.
+        """
+        
+        return Microprocessor("Broadwell",
+                              cores =16 ,
+                              freq = 2.6,
+                              tfs = 0.6656)
+    
+#-------------------------------------------------------------------------------
+
+    def KNL():
+        """
+        Knights Landing microprocessor (Intel Xeon Phi 7290).
+        
+        Result:
+            Knights Landing microprocessor.
+        """
+        
+        return Microprocessor("KNL",
+                              cores = 72,
+                              freq = 1.5,
+                              tfs = 3.456)
+
+#-------------------------------------------------------------------------------
+
+    def WM():
+        """
+        Westmere microprocessor (Intel Xeon X5675).
+        
+        Result:
+            Westmere microprocessor.
+        """
+        
+        return Microprocessor("Westmere",
+                              cores = 6,
+                              freq = 3.06,
+                              tfs = 0.14488)
+
+#-------------------------------------------------------------------------------
+
+    def Tesla():
+        """
+        Tesla microprocessor (NVIDIA Tesla M2090).
+        
+        Result:
+            Tesla microprocessor.
+        """
+        
+        return Microprocessor("Tesla",
+                              cores = 512,
+                              freq = 1.3,
+                              tfs = 0.665)
+    
+#-------------------------------------------------------------------------------
