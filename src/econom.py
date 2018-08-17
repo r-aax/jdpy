@@ -795,7 +795,7 @@ class PersonsGroup:
 # Microprocessor.
 #-------------------------------------------------------------------------------
             
-class Microprocessor:
+class CPU:
     """
     Microprocessor.
     """            
@@ -829,9 +829,9 @@ class Microprocessor:
         """
         
         return self.name \
-               + " (cores = " + str(self.cores) \
-               + ", freq = " + str(self.freq) \
-               + ", tfs = " + str(self.tfs) + ")"
+               + "/c" + str(self.cores) \
+               + "/f" + str(self.freq) \
+               + "/t" + str(self.tfs)
 
 #-------------------------------------------------------------------------------
 
@@ -843,10 +843,7 @@ class Microprocessor:
             Harpertown microprocessor.
         """
         
-        return Microprocessor("Harpertown",
-                              cores = 4,
-                              freq = 3.0,
-                              tfs = 0.048)
+        return CPU("HT", cores = 4, freq = 3.0, tfs = 0.048)
 
 #-------------------------------------------------------------------------------
 
@@ -858,10 +855,7 @@ class Microprocessor:
             Ivy Bridge microprocessor.
         """
         
-        return Microprocessor("Ivy Bridge",
-                              cores = 8,
-                              freq = 3.3, 
-                              tfs = 0.2112)
+        return CPU("IB", cores = 8, freq = 3.3, tfs = 0.2112)
 
 #-------------------------------------------------------------------------------
 
@@ -873,10 +867,7 @@ class Microprocessor:
             Knights Corner microprocessor.
         """
         
-        return Microprocesssor("KNC Petastream",
-                               cores = 61,
-                               freq = 1.238,
-                               tfs = 1.208)
+        return CPU("KNC", cores = 61, freq = 1.238, tfs = 1.208)
 
 #-------------------------------------------------------------------------------
 
@@ -888,10 +879,7 @@ class Microprocessor:
             Sandy Bridge microprocessor.
         """
         
-        return Microprocessor("Sandy Bridge",
-                              cores = 8,
-                              freq = 2.9,
-                              tfs = 0.1856)
+        return CPU("SB", cores = 8, freq = 2.9, tfs = 0.1856)
 
 #-------------------------------------------------------------------------------
 
@@ -903,10 +891,7 @@ class Microprocessor:
             Knights Corner microprocessor.
         """
         
-        return Microprocessor("KNC Tornado",
-                              cores = 61,
-                              freq = 1.1,
-                              tfs = 1.0736)
+        return CPU("KNC", cores = 61, freq = 1.1, tfs = 1.0736)
 
 #-------------------------------------------------------------------------------
 
@@ -918,10 +903,7 @@ class Microprocessor:
             Haswell microprocessor.
         """
         
-        return Microprocessor("Haswell",
-                              cores = 14,
-                              freq = 2.6,
-                              tfs = 0.5824)
+        return CPU("HW", cores = 14, freq = 2.6, tfs = 0.5824)
 
 #-------------------------------------------------------------------------------
 
@@ -933,10 +915,7 @@ class Microprocessor:
             Broadwell microprocessor.
         """
         
-        return Microprocessor("Broadwell",
-                              cores =16 ,
-                              freq = 2.6,
-                              tfs = 0.6656)
+        return CPU("BW", cores =16, freq = 2.6, tfs = 0.6656)
     
 #-------------------------------------------------------------------------------
 
@@ -948,10 +927,7 @@ class Microprocessor:
             Knights Landing microprocessor.
         """
         
-        return Microprocessor("KNL",
-                              cores = 72,
-                              freq = 1.5,
-                              tfs = 3.456)
+        return CPU("KNL", cores = 72, freq = 1.5, tfs = 3.456)
 
 #-------------------------------------------------------------------------------
 
@@ -963,10 +939,7 @@ class Microprocessor:
             Westmere microprocessor.
         """
         
-        return Microprocessor("Westmere",
-                              cores = 6,
-                              freq = 3.06,
-                              tfs = 0.14488)
+        return CPU("WM", cores = 6, freq = 3.06, tfs = 0.14488)
 
 #-------------------------------------------------------------------------------
 
@@ -978,9 +951,264 @@ class Microprocessor:
             Tesla microprocessor.
         """
         
-        return Microprocessor("Tesla",
-                              cores = 512,
-                              freq = 1.3,
-                              tfs = 0.665)
+        return CPU("TL", cores = 512, freq = 1.3, tfs = 0.665)
     
 #-------------------------------------------------------------------------------
+# Segment.
+#-------------------------------------------------------------------------------
+        
+class Node:
+    """
+    Supercomputer node.
+    """
+        
+#-------------------------------------------------------------------------------
+
+    def __init__(self, name, cpus):
+        """
+        Constructor.
+        
+        Arguments:
+            name -- name of node,
+            cpus -- cpus (list of tuples).
+                [(cpu1, count1), (cpu2, count2), ...]
+        """
+        
+        self.name = name
+        self.cpus = cpus
+
+#-------------------------------------------------------------------------------
+
+    def MVS100K():
+        """
+        MVS-100K node.
+        
+        Result:
+            MVS-100K node.
+        """
+        
+        return Node("100K", cpus = [(CPU.HT(), 2)])
+
+#-------------------------------------------------------------------------------
+
+    def Petastream():
+        """
+        Petastream node.
+        
+        Result:
+            Petastream node.
+        """
+        
+        return Node("Petastream", cpus = [(CPU.IB(), 1), (CPU.KNC_ps(), 8)])
+    
+#-------------------------------------------------------------------------------
+
+    def Tornado():
+        """
+        Tornado node.
+        
+        Result:
+            Tornado node.
+        """
+        
+        return Node("Tornado", cpus = [(CPU.SB(), 2), (CPU.KNC_tr(), 2)])
+
+#-------------------------------------------------------------------------------
+
+    def Haswell():
+        """
+        Haswell node.
+        
+        Result:
+            Haswell node.
+        """
+        
+        return Node("Haswell", cpus = [(CPU.HW(), 2)])
+
+#-------------------------------------------------------------------------------
+
+    def Broadwell():
+        """
+        Broadwell node,
+        
+        Result:
+            Broadwell node.
+        """
+        
+        return Node("Broadwell", cpus = [(CPU.BW(), 2)])
+
+#-------------------------------------------------------------------------------
+
+    def KNL():
+        """
+        KNL node.
+        
+        Result:
+            KNL node.
+        """
+        
+        return Node("KNL", cpus = [(CPU.KNL(), 1)])
+
+#-------------------------------------------------------------------------------
+
+    def NVIDIA():
+        """
+        NVIDIA node.
+        
+        Result:
+            NVIDIA node.
+        """
+        
+        return Node("NVIDIA", cpus = [(CPU.WM(), 2), (CPU.Tesla(), 8)])
+
+#-------------------------------------------------------------------------------
+
+    def __repr__(self):
+        """
+        String representation.
+        
+        Result:
+            String representation.
+        """
+        
+        r = "N. " + self.name + " : ["
+        
+        for c in self.cpus:
+            r += str(c) + ", "
+          
+        # Delete last coma.
+        if self.cpus != []:
+            r = r[:-2]
+            
+        return r + "]"
+
+#-------------------------------------------------------------------------------    
+# Segment.
+#-------------------------------------------------------------------------------
+
+class Segment:
+    """
+    Supercomputer segment.
+    """
+    
+#-------------------------------------------------------------------------------
+
+    def __init__(self, name, nodes):
+        """
+        Constructor.
+        
+        Arguments:
+            name -- name,
+            nodes -- nodes (list of tuples).
+                [(node1, count1), (node2, count2), ...]        
+        """
+
+        self.name = name
+        self.nodes = nodes
+        
+#-------------------------------------------------------------------------------
+
+    def MVS100K():
+        """
+        MVS-100K segment.
+        
+        Result:
+            MVS-100K segment.
+        """
+        
+        return Segment("100K", nodes = [(Node.MVS100K(), 110)])
+
+#-------------------------------------------------------------------------------
+
+    def Petastream():
+        """
+        Petastream segment.
+        
+        Result:
+            Petastream segment.
+        """
+        
+        return Segment("Petastream", nodes = [(Node.Petastream(), 8)])
+    
+#-------------------------------------------------------------------------------
+
+    def Tornado():
+        """
+        Tornado segment.
+        
+        Result:
+            Tornado segment.
+        """
+        
+        return Segment("Tornado", nodes = [(Node.Tornado(), 207)])
+
+#-------------------------------------------------------------------------------
+
+    def Haswell():
+        """
+        Haswell segment.
+        
+        Result:
+            Haswell segment.
+        """
+        
+        return Segment("Haswell", nodes = [(Node.Haswell(), 42)])
+
+#-------------------------------------------------------------------------------
+
+    def Broadwell():
+        """
+        Broadwell segment,
+        
+        Result:
+            Broadwell segment.
+        """
+        
+        return Segment("Broadwell", nodes = [(Node.Broadwell(), 136)])
+
+#-------------------------------------------------------------------------------
+
+    def KNL():
+        """
+        KNL segment.
+        
+        Result:
+            KNL segment.
+        """
+        
+        return Segment("KNL", nodes = [(Node.KNL(), 38)])
+
+#-------------------------------------------------------------------------------
+
+    def NVIDIA():
+        """
+        NVIDIA segment.
+        
+        Result:
+            NVIDIA segment.
+        """
+        
+        return Segment("NVIDIA", nodes = [(Node.NVIDIA(), 6)])
+
+#-------------------------------------------------------------------------------
+
+    def __repr__(self):
+        """
+        String representation.
+        
+        Result:
+            String representation.
+        """
+        
+        r = "S. " + self.name + " : ["
+        
+        for c in self.nodes:
+            r += str(c) + ", "
+          
+        # Delete last coma.
+        if self.nodes != []:
+            r = r[:-2]
+            
+        return r + "]"
+
+#-------------------------------------------------------------------------------    
