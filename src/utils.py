@@ -10,6 +10,23 @@ Created on Mon Jul  2 15:34:59 2018
 import numpy as np
 
 #-------------------------------------------------------------------------------
+# Constants.
+#-------------------------------------------------------------------------------
+
+class Consts:
+    """
+    Class for constants.
+    """
+
+    YEAR_MONTHS    =  12 # Months count in a year.
+    YEAR_DAYS      = 365 # Days count in a not-leap year.
+    WEEK_DAYS      =   7 # Days count in a week.
+    DAY_HOURS      =  24 # Hours count in a day.
+    HOUR_MINUTES   =  60 # Minutes count in a hour.
+    MINUTE_SECONDS =  60 # Seconds count in a minute.
+    
+
+#-------------------------------------------------------------------------------
 # Lists (names start with li_*).
 #-------------------------------------------------------------------------------
 
