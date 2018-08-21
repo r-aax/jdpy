@@ -131,7 +131,7 @@ class CPU:
             Broadwell microprocessor.
         """
         
-        return CPU("BW", cores =16, freq = 2.6, tfs = 0.6656)
+        return CPU("BW", cores = 16, freq = 2.6, tfs = 0.6656)
     
 #-------------------------------------------------------------------------------
 
@@ -170,6 +170,22 @@ class CPU:
         return CPU("TL", cores = 512, freq = 1.3, tfs = 0.665)
     
 #-------------------------------------------------------------------------------
+
+    def single_property(self, cpu_fun):
+        """
+        Single property.
+        
+        Arguments:
+            cpu_fun -- function for process CPU level.
+            
+        Result:
+            Single property.
+        """
+        
+        # Only possible case is cpu_fun != None.        
+        return cpu_fun(self)
+    
+#-------------------------------------------------------------------------------
 # Segment.
 #-------------------------------------------------------------------------------
         
@@ -186,8 +202,8 @@ class Node:
         
         Arguments:
             name -- name of node,
-            cpus -- cpus (list of tuples) with RAM.
-                [(cpu1, count1, ram1), (cpu2, count2, ram2), ...]
+            cpus -- cpus (list of tuples) with RAM
+                [(cpu1, count1, ram1), (cpu2, count2, ram2), ...].
         """
         
         self.name = name
@@ -306,7 +322,31 @@ class Node:
             
         return r + "]"
 
-#-------------------------------------------------------------------------------    
+#-------------------------------------------------------------------------------
+
+    def properties_tree(self,
+                        node_fun = None,
+                        cpu_fun = None):
+        """
+        Get properties tree (nested array).
+        
+        Arguments:
+            node_fun -- function for process Node level,
+            cpu_fun -- function for process CPU level.
+            
+        Result:
+            Properties tree.
+        """
+        
+        # Simple characteristic of node.              
+        if node_fun != None:
+            return node_fun(self)
+        
+        # Generate properties tries for all cpus.
+        fun = lambda x: x[0].single_property(cpu_fun)
+        return list(map(fun, self.cpus))        
+
+#-------------------------------------------------------------------------------
 # Segment.
 #-------------------------------------------------------------------------------
 
@@ -323,10 +363,10 @@ class Segment:
         
         Arguments:
             name -- name,
-            nodes -- nodes (list of tuples).
+            nodes -- nodes (list of tuples)
                 [(node1, count1), (node2, count2), ...],
             watts -- power,
-            pue -- power usage effectiveness
+            pue -- power usage effectiveness.
         """
 
         self.name = name
@@ -460,7 +500,33 @@ class Segment:
             
         return r + "], w/p = " + str(self.watts) + "/" + str(self.pue)
 
-#-------------------------------------------------------------------------------   
+#-------------------------------------------------------------------------------
+
+    def properties_tree(self,
+                        segment_fun = None,
+                        node_fun = None,
+                        cpu_fun = None):
+        """
+        Get properties tree (nested array).
+        
+        Arguments:
+            segment_fun -- function for proceess Segment level,
+            node_fun -- function for process Node level,
+            cpu_fun -- function for process CPU level.
+            
+        Result:
+            Properties tree.
+        """
+        
+        # Simple characteristic of segment.              
+        if segment_fun != None:
+            return segment_fun(self)
+        
+        # Generate properties tries for all nodes.
+        fun = lambda x: x[0].properties_tree(node_fun, cpu_fun)
+        return list(map(fun, self.nodes))        
+        
+#-------------------------------------------------------------------------------    
 # Supercpmputer resources. 
 #-------------------------------------------------------------------------------
 
@@ -478,6 +544,7 @@ class Resources:
         Arguments:
             name -- name of resources,
             segments -- list of segments
+                [segment1, segment1, ...].
         """
         
         self.name = name
@@ -518,3 +585,31 @@ class Resources:
     
 #-------------------------------------------------------------------------------
 
+    def properties_tree(self,
+                        resources_fun = None,
+                        segment_fun = None,
+                        node_fun = None,
+                        cpu_fun = None):
+        """
+        Get properties tree (nested array).
+        
+        Arguments:
+            resources_fun -- function for process Resources level,
+            segment_fun -- function for proceess Segment level,
+            node_fun -- function for process Node level,
+            cpu_fun -- function for process CPU level.
+            
+        Result:
+            Properties tree.
+        """
+        
+        # Simple characteristic of resources.              
+        if resources_fun != None:
+            return resources_fun(self)
+        
+        # Generate properties tries for all segments.
+        fun = lambda x: x.properties_tree(segment_fun, node_fun, cpu_fun)
+        return list(map(fun, self.segments))        
+        
+#-------------------------------------------------------------------------------
+                      
