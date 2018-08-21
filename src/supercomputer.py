@@ -18,19 +18,19 @@ class CPU:
     
 #-------------------------------------------------------------------------------
 
-    def __init__(self, name, cores, freq, tfs):
+    def __init__(self, name, cores_count, freq, tfs):
         """
         Constructor.
         
         Arguments:
             name -- name,
-            cores -- cores count,
+            cores_count -- cores count,
             freq -- frequency (GHz),
             tfs -- peak performance (TFLOPS).
         """
         
         self.name = name
-        self.cores = cores
+        self.cores_count = cores_count
         self.freq = freq
         self.tfs = tfs
     
@@ -45,7 +45,7 @@ class CPU:
         """
         
         return self.name \
-               + "/c" + str(self.cores) \
+               + "/c" + str(self.cores_count) \
                + "/f" + str(self.freq) \
                + "/t" + str(self.tfs)
 
@@ -59,7 +59,7 @@ class CPU:
             Harpertown microprocessor.
         """
         
-        return CPU("HT", cores = 4, freq = 3.0, tfs = 0.048)
+        return CPU("HT", cores_count = 4, freq = 3.0, tfs = 0.048)
 
 #-------------------------------------------------------------------------------
 
@@ -71,7 +71,7 @@ class CPU:
             Ivy Bridge microprocessor.
         """
         
-        return CPU("IB", cores = 8, freq = 3.3, tfs = 0.2112)
+        return CPU("IB", cores_count = 8, freq = 3.3, tfs = 0.2112)
 
 #-------------------------------------------------------------------------------
 
@@ -83,7 +83,7 @@ class CPU:
             Knights Corner microprocessor.
         """
         
-        return CPU("KNC", cores = 61, freq = 1.238, tfs = 1.208)
+        return CPU("KNC", cores_count = 61, freq = 1.238, tfs = 1.208)
 
 #-------------------------------------------------------------------------------
 
@@ -95,7 +95,7 @@ class CPU:
             Sandy Bridge microprocessor.
         """
         
-        return CPU("SB", cores = 8, freq = 2.9, tfs = 0.1856)
+        return CPU("SB", cores_count = 8, freq = 2.9, tfs = 0.1856)
 
 #-------------------------------------------------------------------------------
 
@@ -107,7 +107,7 @@ class CPU:
             Knights Corner microprocessor.
         """
         
-        return CPU("KNC", cores = 61, freq = 1.1, tfs = 1.0736)
+        return CPU("KNC", cores_count = 61, freq = 1.1, tfs = 1.0736)
 
 #-------------------------------------------------------------------------------
 
@@ -119,7 +119,7 @@ class CPU:
             Haswell microprocessor.
         """
         
-        return CPU("HW", cores = 14, freq = 2.6, tfs = 0.5824)
+        return CPU("HW", cores_count = 14, freq = 2.6, tfs = 0.5824)
 
 #-------------------------------------------------------------------------------
 
@@ -131,7 +131,7 @@ class CPU:
             Broadwell microprocessor.
         """
         
-        return CPU("BW", cores = 16, freq = 2.6, tfs = 0.6656)
+        return CPU("BW", cores_count = 16, freq = 2.6, tfs = 0.6656)
     
 #-------------------------------------------------------------------------------
 
@@ -143,7 +143,7 @@ class CPU:
             Knights Landing microprocessor.
         """
         
-        return CPU("KNL", cores = 72, freq = 1.5, tfs = 3.456)
+        return CPU("KNL", cores_count = 72, freq = 1.5, tfs = 3.456)
 
 #-------------------------------------------------------------------------------
 
@@ -155,7 +155,7 @@ class CPU:
             Westmere microprocessor.
         """
         
-        return CPU("WM", cores = 6, freq = 3.06, tfs = 0.14488)
+        return CPU("WM", cores_count = 6, freq = 3.06, tfs = 0.14488)
 
 #-------------------------------------------------------------------------------
 
@@ -167,7 +167,7 @@ class CPU:
             Tesla microprocessor.
         """
         
-        return CPU("TL", cores = 512, freq = 1.3, tfs = 0.665)
+        return CPU("TL", cores_count = 512, freq = 1.3, tfs = 0.665)
     
 #-------------------------------------------------------------------------------
 
@@ -636,4 +636,100 @@ class Resources:
         return list(map(fun, self.segments))        
         
 #-------------------------------------------------------------------------------
-                      
+
+    def pt_segment_mark(self):
+        """
+        Segments marks.
+        
+        Result:
+            Segments marks.
+        """
+        
+        return self.properties_tree(segment_fun = lambda x: 1)
+
+#-------------------------------------------------------------------------------
+
+    def pt_node_mark(self):
+        """
+        Nodes marks.
+        
+        Result:
+            Nodes marks.
+        """
+        
+        return self.properties_tree(node_fun = lambda x: 1)
+
+#-------------------------------------------------------------------------------
+
+    def pt_cpu_mark(self):
+        """
+        CPUs marks.
+        
+        Result:
+            CPUs marks.
+        """
+        
+        return self.properties_tree(cpu_fun = lambda x: 1) 
+
+#-------------------------------------------------------------------------------
+
+    def pt_segment_nodes_count(self):
+        """
+        Properties tree on segment nodes count.
+        
+        Result:
+            Properties tree on segment nodes count.
+        """
+        
+        return self.properties_tree(node_tuple_fun = lambda x: x[1])
+
+#-------------------------------------------------------------------------------
+
+    def pt_node_cpus_count(self):
+        """
+        Properties tree on node cpus count.
+        
+        Result:
+            Properties tree on node cpus count.
+        """
+        
+        return self.properties_tree(cpu_tuple_fun = lambda x: x[1])
+
+#-------------------------------------------------------------------------------
+
+    def pt_cpu_cores_count(self):
+        """
+        Properties tree on cpu cores count.
+        
+        Result:
+            Propertie tree on cpu cores count.
+        """
+        
+        return self.properties_tree(cpu_fun = lambda x: x.cores_count)
+        
+#-------------------------------------------------------------------------------
+
+    def pt_cpu_freq(self):
+        """
+        Properties tree on cpu frequency.
+        
+        Result:
+            Propertie tree on cpu frequency.
+        """
+        
+        return self.properties_tree(cpu_fun = lambda x: x.freq)
+        
+#-------------------------------------------------------------------------------
+
+    def pt_cpu_tfs(self):
+        """
+        Properties tree on cpu TFLOPS.
+        
+        Result:
+            Propertie tree on cpu TFLOPS.
+        """
+        
+        return self.properties_tree(cpu_fun = lambda x: x.tfs)
+        
+#-------------------------------------------------------------------------------
+    
