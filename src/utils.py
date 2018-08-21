@@ -86,6 +86,44 @@ def li_flatten(a):
     return reduce(lambda x, y: x + li_flatten(y), a, [])
     
 #-------------------------------------------------------------------------------
+
+def li_zip(a, b, fun):
+    """
+    Zip two lists with given function.
+    
+    Arguments:
+        a -- firts list,
+        b -- second list,
+        fun -- function.
+    
+    Result:
+        Zipped list.
+        
+    Warning:
+        Lists must be of the same shapes.
+    
+    Examples:
+        li_zip([1, [2, 3]], [4, [5, 6]], lambda x, y: x + y) -> [5, [7, 9]]
+        li_zip([[3]], [[4]], lambda x, y: x * y) -> [[12]]
+    """
+
+    # Check empty lists.
+    if a == [] or b == []:
+        return []
+    
+    # Check not lists elements.
+    is_a = isinstance(a, list)
+    is_b = isinstance(b, list)
+    if is_a != is_b:
+        raise RuntimeError("li_zip: a, b arrays shapes differ")
+    if not is_a:
+        return fun(a, b)
+
+    # Resursion.
+    z = list(zip(a, b))
+    return list(map(lambda x: li_zip(x[0], x[1], fun), z))
+
+#-------------------------------------------------------------------------------
 # Numpy arrays (names start with npa_*).    
 #-------------------------------------------------------------------------------
     
@@ -151,7 +189,11 @@ if __name__ == "__main__":
     assert li_merge([1], [2, 2, 2]) == [1, 2, 2, 2], "li_merge fault 02"
     assert li_merge([1, 1, 1], [2]) == [1, 2, 1, 1], "li_merge fault 03"
     assert li_flatten([[1]]) == [1], "li_flatten fault 01"
-    assert li_flatten([1, [2, 3]]) == [1, 2, 3], "li flatten fault 02"
+    assert li_flatten([1, [2, 3]]) == [1, 2, 3], "li__flatten fault 02"
+    assert li_zip([1, [2, 3]],
+                  [4, [5, 6]],
+                  lambda x, y: x + y) == [5, [7, 9]], "li_zip fault 01"
+    assert li_zip([[3]], [[4]], lambda x, y: x * y) == [[12]], "li_zip fault 02"
     #
     assert str_chop("123456789", 4) == ["1234", "5678", "9"], "str_chop fault 01"
     assert str_chop("123456789", -4) == ["1", "2345", "6789"], "str_chop fault 02"

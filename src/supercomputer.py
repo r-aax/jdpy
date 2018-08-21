@@ -6,6 +6,7 @@ Created on Mon Aug 20 11:49:25 2018
 """
 
 from functools import reduce
+import utils as ut
 
 #-------------------------------------------------------------------------------
 # Microprocessor.
@@ -350,7 +351,7 @@ class Node:
         
         # Generate properties trees for all cpus.
         fun = lambda x: x[0].single_property(cpu_fun)
-        return list(map(fun, self.cpus))        
+        return [fun(x) for x in self.cpus]
 
 #-------------------------------------------------------------------------------
 # Segment.
@@ -540,7 +541,7 @@ class Segment:
         fun = lambda x: x[0].properties_tree(node_fun,
                                              cpu_tuple_fun,
                                              cpu_fun)
-        return list(map(fun, self.nodes))        
+        return [fun(x) for x in self.nodes]
         
 #-------------------------------------------------------------------------------    
 # Supercpmputer resources. 
@@ -624,8 +625,8 @@ class Resources:
         """
         
         # Simple characteristic of resources.              
-        if resources_fun != None:
-            return resources_fun(self)
+#        if resources_fun != None:
+ #           return resources_fun(self)
         
         # Generate properties tries for all segments.
         fun = lambda x: x.properties_tree(segment_fun,
@@ -633,31 +634,7 @@ class Resources:
                                           node_fun,
                                           cpu_tuple_fun,
                                           cpu_fun)
-        return list(map(fun, self.segments))        
-        
-#-------------------------------------------------------------------------------
-
-    def pt_segment_mark(self):
-        """
-        Segments marks.
-        
-        Result:
-            Segments marks.
-        """
-        
-        return self.properties_tree(segment_fun = lambda x: 1)
-
-#-------------------------------------------------------------------------------
-
-    def pt_node_mark(self):
-        """
-        Nodes marks.
-        
-        Result:
-            Nodes marks.
-        """
-        
-        return self.properties_tree(node_fun = lambda x: 1)
+        return [fun(x) for x in self.segments]
 
 #-------------------------------------------------------------------------------
 
@@ -673,27 +650,27 @@ class Resources:
 
 #-------------------------------------------------------------------------------
 
-    def pt_segment_nodes_count(self):
+    def pt_node_mark(self):
         """
-        Properties tree on segment nodes count.
+        Nodes marks.
         
         Result:
-            Properties tree on segment nodes count.
+            Nodes marks.
         """
         
-        return self.properties_tree(node_tuple_fun = lambda x: x[1])
+        return self.properties_tree(node_fun = lambda x: 1)
 
 #-------------------------------------------------------------------------------
 
-    def pt_node_cpus_count(self):
+    def pt_segment_mark(self):
         """
-        Properties tree on node cpus count.
+        Segments marks.
         
         Result:
-            Properties tree on node cpus count.
+            Segments marks.
         """
         
-        return self.properties_tree(cpu_tuple_fun = lambda x: x[1])
+        return self.properties_tree(segment_fun = lambda x: 1)
 
 #-------------------------------------------------------------------------------
 
@@ -731,5 +708,42 @@ class Resources:
         
         return self.properties_tree(cpu_fun = lambda x: x.tfs)
         
+#-------------------------------------------------------------------------------
+
+    def pt_node_cpus_count(self):
+        """
+        Properties tree on node cpus count.
+        
+        Result:
+            Properties tree on node cpus count.
+        """
+        
+        return self.properties_tree(cpu_tuple_fun = lambda x: x[1])
+
+#-------------------------------------------------------------------------------
+
+    def pt_node_cpus_tfs(self):
+        """
+        Properties tree on node cpus TFLOPS.
+        
+        Result:
+            Properties tree on node cpus TFLOPS.
+        """
+        
+        return ut.li_zip(self.pt_cpu_tfs(), self.pt_node_cpus_count(),
+                         lambda x, y: x * y)
+
+#-------------------------------------------------------------------------------
+
+    def pt_segment_nodes_count(self):
+        """
+        Properties tree on segment nodes count.
+        
+        Result:
+            Properties tree on segment nodes count.
+        """
+        
+        return self.properties_tree(node_tuple_fun = lambda x: x[1])
+
 #-------------------------------------------------------------------------------
     
