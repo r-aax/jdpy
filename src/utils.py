@@ -8,6 +8,7 @@ Created on Mon Jul  2 15:34:59 2018
 """
 
 import numpy as np
+from functools import reduce
 
 #-------------------------------------------------------------------------------
 # Constants.
@@ -42,9 +43,9 @@ def li_merge(a, b):
         Merged list.
         
     Examples:
-        merge([1, 1, 1], [2, 2, 2]) -> [1, 2, 1, 2, 1, 2]
-        merge([1, 1, 1, 1], [2, 2]) -> [1, 2, 1, 2, 1, 1]
-        merge([1, 1], [2, 2, 2, 2]) -> [1, 2, 1, 2, 2, 2]
+        li_merge([1, 1, 1], [2, 2, 2]) -> [1, 2, 1, 2, 1, 2]
+        li_merge([1, 1, 1, 1], [2, 2]) -> [1, 2, 1, 2, 1, 1]
+        li_merge([1, 1], [2, 2, 2, 2]) -> [1, 2, 1, 2, 2, 2]
     """
     
     # Check the case when one list is empty.
@@ -56,6 +57,34 @@ def li_merge(a, b):
     # Both lists are non empty.
     return [a[0], b[0]] + li_merge(a[1 :], b[1 :])
 
+#-------------------------------------------------------------------------------
+
+def li_flatten(a):
+    """
+    Flatten list.
+    
+    Argument:
+        a -- list.
+        
+    Result:
+        Flattened list.
+        
+    Examples:
+        li_flatten([[1]]) -> [1]
+        li_flatten([1, [2, 3]]) -> [1, 2, 3]
+    """
+    
+    # Empty list.
+    if a == []:
+        return []
+    
+    # Single element.
+    if not isinstance(a, list):
+        return [a]
+    
+    # Recursion.
+    return reduce(lambda x, y: x + li_flatten(y), a, [])
+    
 #-------------------------------------------------------------------------------
 # Numpy arrays (names start with npa_*).    
 #-------------------------------------------------------------------------------
@@ -91,8 +120,8 @@ def str_chop(s, size = 1):
         List of chunks - chopped string.
     
     Examples:
-        chop("123456789", 4) -> ["1234", "5678", "9"]
-        chop("123456789", -4) -> ["1", "2345", "6789"]
+        str_chop("123456789", 4) -> ["1234", "5678", "9"]
+        str_chop("123456789", -4) -> ["1", "2345", "6789"]
     """
     
     if len(s) <= abs(size):
@@ -118,12 +147,14 @@ def str_chop(s, size = 1):
 #-------------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    assert li_merge([1, 1], [2, 2]) == [1, 2, 1, 2], "li_merge fault"
-    assert li_merge([1], [2, 2, 2]) == [1, 2, 2, 2], "li_merge fault"
-    assert li_merge([1, 1, 1], [2]) == [1, 2, 1, 1], "li_merge fault"
+    assert li_merge([1, 1], [2, 2]) == [1, 2, 1, 2], "li_merge fault 01"
+    assert li_merge([1], [2, 2, 2]) == [1, 2, 2, 2], "li_merge fault 02"
+    assert li_merge([1, 1, 1], [2]) == [1, 2, 1, 1], "li_merge fault 03"
+    assert li_flatten([[1]]) == [1], "li_flatten fault 01"
+    assert li_flatten([1, [2, 3]]) == [1, 2, 3], "li flatten fault 02"
     #
-    assert str_chop("123456789", 4) == ["1234", "5678", "9"], "str_chop fault"
-    assert str_chop("123456789", -4) == ["1", "2345", "6789"], "str_chop fault"
+    assert str_chop("123456789", 4) == ["1234", "5678", "9"], "str_chop fault 01"
+    assert str_chop("123456789", -4) == ["1", "2345", "6789"], "str_chop fault 02"
 
 #-------------------------------------------------------------------------------
         

@@ -326,13 +326,15 @@ class Node:
 
     def properties_tree(self,
                         node_fun = None,
+                        cpu_tuple_fun = None,
                         cpu_fun = None):
         """
         Get properties tree (nested array).
         
         Arguments:
-            node_fun -- function for process Node level,
-            cpu_fun -- function for process CPU level.
+            node_fun -- function for process node,
+            cpu_tuple_fun -- function for process cpu tuple,
+            cpu_fun -- function for process cpu.
             
         Result:
             Properties tree.
@@ -342,7 +344,11 @@ class Node:
         if node_fun != None:
             return node_fun(self)
         
-        # Generate properties tries for all cpus.
+        # Check for cpu_tuple function.
+        if cpu_tuple_fun != None:
+            return list(map(cpu_tuple_fun, self.cpus))
+        
+        # Generate properties trees for all cpus.
         fun = lambda x: x[0].single_property(cpu_fun)
         return list(map(fun, self.cpus))        
 
@@ -504,15 +510,19 @@ class Segment:
 
     def properties_tree(self,
                         segment_fun = None,
+                        node_tuple_fun = None,
                         node_fun = None,
+                        cpu_tuple_fun = None,
                         cpu_fun = None):
         """
         Get properties tree (nested array).
         
         Arguments:
-            segment_fun -- function for proceess Segment level,
-            node_fun -- function for process Node level,
-            cpu_fun -- function for process CPU level.
+            segment_fun -- function for proceess segment,
+            node_tuple_fun -- function for process (node, ...) tuple,
+            node_fun -- function for process node,
+            cpu_tuple_fun -- function for process (cpu, ...) tuple,
+            cpu_fun -- function for process cpu.
             
         Result:
             Properties tree.
@@ -522,8 +532,14 @@ class Segment:
         if segment_fun != None:
             return segment_fun(self)
         
-        # Generate properties tries for all nodes.
-        fun = lambda x: x[0].properties_tree(node_fun, cpu_fun)
+        # Check node_tuple_fun.
+        if node_tuple_fun != None:
+            return list(map(node_tuple_fun, self.nodes))
+        
+        # Generate properties trees for all nodes.
+        fun = lambda x: x[0].properties_tree(node_fun,
+                                             cpu_tuple_fun,
+                                             cpu_fun)
         return list(map(fun, self.nodes))        
         
 #-------------------------------------------------------------------------------    
@@ -588,16 +604,20 @@ class Resources:
     def properties_tree(self,
                         resources_fun = None,
                         segment_fun = None,
+                        node_tuple_fun = None,
                         node_fun = None,
+                        cpu_tuple_fun = None,
                         cpu_fun = None):
         """
         Get properties tree (nested array).
         
         Arguments:
-            resources_fun -- function for process Resources level,
-            segment_fun -- function for proceess Segment level,
-            node_fun -- function for process Node level,
-            cpu_fun -- function for process CPU level.
+            resources_fun -- function for process resources,
+            segment_fun -- function for proceess segment,
+            node_tuple_fun -- fucntion for process (node, ...) tuple,
+            node_fun -- function for process node level,
+            cpu_tuple_fun -- function for process (cpu, ...) tuple,
+            cpu_fun -- function for process cpu level.
             
         Result:
             Properties tree.
@@ -608,7 +628,11 @@ class Resources:
             return resources_fun(self)
         
         # Generate properties tries for all segments.
-        fun = lambda x: x.properties_tree(segment_fun, node_fun, cpu_fun)
+        fun = lambda x: x.properties_tree(segment_fun,
+                                          node_tuple_fun,
+                                          node_fun,
+                                          cpu_tuple_fun,
+                                          cpu_fun)
         return list(map(fun, self.segments))        
         
 #-------------------------------------------------------------------------------
