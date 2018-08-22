@@ -7,6 +7,7 @@ Created on Mon Aug 20 11:49:25 2018
 
 from functools import reduce
 import utils as ut
+import jdfun
 
 #-------------------------------------------------------------------------------
 # Microprocessor.
@@ -730,8 +731,7 @@ class Resources:
             Properties tree on node cpus TFLOPS.
         """
         
-        return ut.li_zip(self.pt_cpu_tfs(), self.pt_node_cpus_count(),
-                         lambda x, y: x * y)
+        return jdfun.zip_mul(self.pt_cpu_tfs(), self.pt_node_cpus_count())
 
 #-------------------------------------------------------------------------------
 
