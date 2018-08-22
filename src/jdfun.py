@@ -9,6 +9,9 @@ Created on Tue Aug 21 14:47:36 2018
 Functions for functional programming.
 """
 
+import utils
+from functools import reduce
+
 #-------------------------------------------------------------------------------
 
 def is_all(a, pred):
@@ -177,6 +180,47 @@ def zip_div(a, b):
     return zip_with(a, b, lambda x, y: x / y)
 
 #-------------------------------------------------------------------------------
+
+def reduce_leafs(a, fun, init):
+    """
+    Reduce leaf lists in a deep list.
+    
+    Arguments:
+        a -- deep list,
+        fun -- reduce function,
+        init -- initial value for reduce.
+        
+    Result:
+        New deep list with reduced leaf lists.
+    """
+    
+    # Simple elements - do nothing
+    if not isinstance(a, list):
+        return a
+    
+    # Check for flat list.
+    if utils.li_is_flat(a):
+        return reduce(fun, a, init)
+    
+    # General case - list is not flat.
+    return list(map(lambda x: reduce_leafs(x, fun, init), a))
+
+#-------------------------------------------------------------------------------
+
+def reduce_leafs_sum(a):
+    """
+    Reduce leafs using sum function.
+    
+    Arguments:
+        a -- deep list.
+        
+    Result:
+        Deep list with reduced leaf lists.
+    """
+    
+    return reduce_leafs(a, lambda x, y: x + y, 0)
+
+#-------------------------------------------------------------------------------
 # Tests.
 #-------------------------------------------------------------------------------
 
@@ -195,6 +239,11 @@ if __name__ == "__main__":
     #
     assert zip_with([1, [2, 3]], [4, [5, 6]],
                     lambda x, y: x + y) == [5, [7, 9]], "zip_with fault 01"
-    assert zip_tuple([1, [[2]]], [3, [[4]]]), "zip_tupple fault 01"
+    assert zip_tuple([1, [[2]]],
+                     [3, [[4]]]) == [(1, 3), [[(2, 4)]]], "zip_tupple fault 01"
+    #
+    assert reduce_leafs([1, [1, 2, 3], [4, 5, 6]],
+                        lambda x, y: x + y, 0) == [1, 6, 15], \
+           "reduce_leafs fault 01"
 
 #-------------------------------------------------------------------------------

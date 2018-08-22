@@ -86,6 +86,27 @@ def li_flatten(a):
     return reduce(lambda x, y: x + li_flatten(y), a, [])
     
 #-------------------------------------------------------------------------------
+
+def li_is_flat(a):
+    """
+    Check if a list is flat.
+    
+    Arguments:
+        a -- list.
+        
+    Result:
+        True -- if the list is flat,
+        False -- if the list is not flat.
+    """
+    
+    # Empty list.
+    if a == []:
+        return True
+    
+    # General case.
+    return not isinstance(a[0], list) and li_is_flat(a[1:])
+
+#-------------------------------------------------------------------------------
 # Numpy arrays (names start with npa_*).    
 #-------------------------------------------------------------------------------
     

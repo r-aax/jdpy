@@ -626,8 +626,8 @@ class Resources:
         """
         
         # Simple characteristic of resources.              
-#        if resources_fun != None:
- #           return resources_fun(self)
+        if resources_fun != None:
+            return resources_fun(self)
         
         # Generate properties tries for all segments.
         fun = lambda x: x.properties_tree(segment_fun,
@@ -708,10 +708,22 @@ class Resources:
         """
         
         return self.properties_tree(cpu_fun = lambda x: x.tfs)
+
+#-------------------------------------------------------------------------------
+
+    def pt_cpu_core_tfs(self):
+        """
+        CPU core TFLOPS properties tree.
+        
+        Result:
+            CPU core TFLOPS properties tree.
+        """
+        
+        return jdfun.zip_div(self.pt_cpu_tfs(), self.pt_cpu_cores_count())
         
 #-------------------------------------------------------------------------------
 
-    def pt_node_cpus_count(self):
+    def pt_node_cpus_count_m(self):
         """
         Properties tree on node cpus count.
         
@@ -723,7 +735,44 @@ class Resources:
 
 #-------------------------------------------------------------------------------
 
-    def pt_node_cpus_tfs(self):
+    def pt_node_cpus_count(self):
+        """
+        CPUs count property tree.
+        
+        Result:
+            CPUscount property tree.
+        """
+        
+        return jdfun.reduce_leafs_sum(self.pt_node_cpus_count_m())
+
+#-------------------------------------------------------------------------------
+
+    def pt_node_cores_count_m(self):
+        """
+        Properties tree on node cores count.
+        
+        Result:
+            Properties tree on node cores count.
+        """
+        
+        return jdfun.zip_mul(self.pt_cpu_cores_count(),
+                             self.pt_node_cpus_count_m())
+
+#-------------------------------------------------------------------------------
+
+    def pt_node_cores_count(self):
+        """
+        Node cores count properties tree.
+        
+        Result:
+            Node cores count properties tree.
+        """
+        
+        return jdfun.reduce_leafs_sum(self.pt_node_cores_count_m())
+
+#-------------------------------------------------------------------------------
+
+    def pt_node_tfs_m(self):
         """
         Properties tree on node cpus TFLOPS.
         
@@ -731,11 +780,47 @@ class Resources:
             Properties tree on node cpus TFLOPS.
         """
         
-        return jdfun.zip_mul(self.pt_cpu_tfs(), self.pt_node_cpus_count())
+        return jdfun.zip_mul(self.pt_cpu_tfs(), self.pt_node_cpus_count_m())
 
 #-------------------------------------------------------------------------------
 
-    def pt_segment_nodes_count(self):
+    def pt_node_tfs(self):
+        """
+        Node TFLOPS properties tree.
+        
+        Result:
+            Node FLOPS properties tree.
+        """
+        
+        return jdfun.reduce_leafs_sum(self.pt_node_tfs_m())
+
+#-------------------------------------------------------------------------------
+
+    def pt_node_ram_m(self):
+        """
+        Node cpus RAMs properties tree.
+        
+        Result:
+            Node cpus RAMs properties tree.
+        """
+        
+        return self.properties_tree(cpu_tuple_fun = lambda x: x[2])
+
+#-------------------------------------------------------------------------------
+
+    def pt_node_ram(self):
+        """
+        Node RAM properties tree.
+        
+        Result:
+            Node RAM property tree.
+        """
+        
+        return jdfun.reduce_leafs_sum(self.pt_node_ram_m())
+
+#-------------------------------------------------------------------------------
+        
+    def pt_segment_nodes_count_m(self):
         """
         Properties tree on segment nodes count.
         
@@ -746,4 +831,175 @@ class Resources:
         return self.properties_tree(node_tuple_fun = lambda x: x[1])
 
 #-------------------------------------------------------------------------------
+
+    def pt_segment_nodes_count(self):
+        """
+        Segment nodes counts properties tree.
+        
+        Result:
+            Segment nodes counts properties tree.
+        """
+        
+        return jdfun.reduce_leafs_sum(self.pt_segment_nodes_count_m())
+
+#-------------------------------------------------------------------------------
+
+    def pt_segment_cpus_count_m(self):
+        """
+        Segment CPUs count properties tree.
+        
+        Result:
+            Segment CPUs count properties tree.
+        """
+        
+        return jdfun.zip_mul(self.pt_node_cpus_count(),
+                             self.pt_segment_nodes_count_m())
+        
+#-------------------------------------------------------------------------------
+        
+    def pt_segment_cpus_count(self):
+        """
+        Segment CPU count properties tree.
+        
+        Result:
+            Segment CPU count properties tree.
+        """
+        
+        return jdfun.reduce_leafs_sum(self.pt_segment_cpus_count_m())
+        
+#-------------------------------------------------------------------------------
+
+    def pt_segment_cores_count_m(self):
+        """
+        Segment cores count properties tree.
+        
+        Result:
+            Segment cores count properties tree.
+        """
+        
+        return jdfun.zip_mul(self.pt_node_cores_count(),
+                             self.pt_segment_nodes_count_m())
+        
+#-------------------------------------------------------------------------------
+        
+    def pt_segment_cores_count(self):
+        """
+        Segment cores count properties tree.
+        
+        Result:
+            Segment cores count properties tree.
+        """
+        
+        return jdfun.reduce_leafs_sum(self.pt_segment_cores_count_m())
+        
+#-------------------------------------------------------------------------------
+
+    def pt_segment_tfs_m(self):
+        """
+        Segment TFLOPS properties tree.
+        
+        Result:
+            Segment TFLOPS properties tree.
+        """
+
+        return jdfun.zip_mul(self.pt_node_tfs(), self.pt_segment_nodes_count_m())
+
+#-------------------------------------------------------------------------------
+
+    def pt_segment_tfs(self):
+        """
+        Segment TFLOPS properties tree.
+        
+        Result:
+            Segment TFLOPS properties tree.
+        """
+        
+        return jdfun.reduce_leafs_sum(self.pt_segment_tfs_m)
+
+#-------------------------------------------------------------------------------
+        
+    def pt_segment_ram_m(self):
+        """
+        Segment RAMs properties tree.
+        
+        Result:
+            Segment RAMs properties tree.
+        """
+        
+        return jdfun.zip_mul(self.pt_node_ram(),
+                             self.pt_segment_nodes_count_m())
     
+#-------------------------------------------------------------------------------    
+
+    def pt_segment_ram(self):
+        """
+        Segment RAM properties tree.
+        
+        Result:
+            Segment RAM properties tree.
+        """
+        
+        return jdfun.reduce_leafs_sum(self.pt_segment_ram_m())
+
+#-------------------------------------------------------------------------------
+
+    def tfs(self):
+        """
+        Resources tfs.
+        
+        Result:
+            Resources TFLOPS.
+        """
+        
+        return jdfun.reduce_leafs_sum(self.pt_segment_tfs())
+        
+#-------------------------------------------------------------------------------
+
+    def ram(self):
+        """
+        RAM.
+        
+        Result:
+            RAM.
+        """
+        
+        return jdfun.reduce_leafs_sum(self.pt_segment_ram())
+        
+#-------------------------------------------------------------------------------
+
+    def nodes_count(self):
+        """
+        Nodes count.
+        
+        Result:
+            Nodes count.
+        """
+        
+        return jdfun.reduce_leafs_sum(self.pt_segment_nodes_count())
+
+#-------------------------------------------------------------------------------
+
+    def cpus_count(self):
+        """
+        CPUs count.
+        
+        Result:
+            CPUs count.
+        """
+        
+        return jdfun.reduce_leafs_sum(self.pt_segment_cpus_count())
+    
+#-------------------------------------------------------------------------------
+
+    def cores_count(self):
+        """
+        Cores count.
+        
+        Result:
+            Cores count.
+        """
+
+        return jdfun.reduce_leafs_sum(self.pt_segment_cores_count())    
+    
+#-------------------------------------------------------------------------------
+        
