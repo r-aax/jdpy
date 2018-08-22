@@ -20,7 +20,7 @@ class CPU:
     
 #-------------------------------------------------------------------------------
 
-    def __init__(self, name, cores_count, freq, tfs):
+    def __init__(self, name, cores_count, freq, tfs, is_acc = False):
         """
         Constructor.
         
@@ -28,13 +28,15 @@ class CPU:
             name -- name,
             cores_count -- cores count,
             freq -- frequency (GHz),
-            tfs -- peak performance (TFLOPS).
+            tfs -- peak performance (TFLOPS),
+            is_acc -- check if CPU is an accelerator.
         """
         
         self.name = name
         self.cores_count = cores_count
         self.freq = freq
         self.tfs = tfs
+        self.is_acc = is_acc
     
 #-------------------------------------------------------------------------------
 
@@ -85,7 +87,8 @@ class CPU:
             Knights Corner microprocessor.
         """
         
-        return CPU("KNC", cores_count = 61, freq = 1.238, tfs = 1.208)
+        return CPU("KNC", cores_count = 61, freq = 1.238, tfs = 1.208,
+                   is_acc = True)
 
 #-------------------------------------------------------------------------------
 
@@ -109,7 +112,8 @@ class CPU:
             Knights Corner microprocessor.
         """
         
-        return CPU("KNC", cores_count = 61, freq = 1.1, tfs = 1.0736)
+        return CPU("KNC", cores_count = 61, freq = 1.1, tfs = 1.0736,
+                   is_acc = True)
 
 #-------------------------------------------------------------------------------
 
@@ -169,7 +173,8 @@ class CPU:
             Tesla microprocessor.
         """
         
-        return CPU("TL", cores_count = 512, freq = 1.3, tfs = 0.665)
+        return CPU("TL", cores_count = 512, freq = 1.3, tfs = 0.665,
+                   is_acc = True)
     
 #-------------------------------------------------------------------------------
 
