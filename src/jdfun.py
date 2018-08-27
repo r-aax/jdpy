@@ -205,14 +205,13 @@ def zip_div(a, b):
 
 #-------------------------------------------------------------------------------
 
-def reduce_leafs(a, fun, init):
+def reduce_leafs(a, fun):
     """
     Reduce leaf lists in a deep list.
     
     Arguments:
         a -- deep list,
-        fun -- reduce function,
-        init -- initial value for reduce.
+        fun -- reduce function.
         
     Result:
         New deep list with reduced leaf lists.
@@ -224,10 +223,10 @@ def reduce_leafs(a, fun, init):
     
     # Check for flat list.
     if utils.li_is_flat(a):
-        return reduce(fun, a, init)
+        return fun(a)
     
     # General case - list is not flat.
-    return list(map(lambda x: reduce_leafs(x, fun, init), a))
+    return list(map(lambda x: reduce_leafs(x, fun), a))
 
 #-------------------------------------------------------------------------------
 
@@ -242,7 +241,24 @@ def reduce_leafs_sum(a):
         Deep list with reduced leaf lists.
     """
     
-    return reduce_leafs(a, lambda x, y: x + y, 0)
+    return reduce_leafs(a, sum)
+
+#-------------------------------------------------------------------------------
+
+def reduce_leafs_mean_geom(a):
+    """
+    Reduce leafs using minimal geometrical function.
+    
+    Arguments:
+        a -- deep list.
+        
+    Result:
+        Deep list with reduced leaf lists.
+    """
+    
+    fun = lambda x: pow(reduce(lambda y, z: y * z, x, 1.0),
+                        1.0 / len(x))
+    return reduce_leafs(a, fun)
 
 #-------------------------------------------------------------------------------
 # Tests.
@@ -266,8 +282,7 @@ if __name__ == "__main__":
     assert zip_tuple([1, [[2]]],
                      [3, [[4]]]) == [(1, 3), [[(2, 4)]]], "zip_tupple fault 01"
     #
-    assert reduce_leafs([1, [1, 2, 3], [4, 5, 6]],
-                        lambda x, y: x + y, 0) == [1, 6, 15], \
+    assert reduce_leafs_sum([1, [1, 2, 3], [4, 5, 6]]) == [1, 6, 15], \
            "reduce_leafs fault 01"
 
 #-------------------------------------------------------------------------------

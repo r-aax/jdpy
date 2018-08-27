@@ -469,6 +469,18 @@ class Segment:
         r.nodes = list(filter(fun, r.nodes))
 
         return r
+
+#-------------------------------------------------------------------------------    
+
+    def energy(self):
+        """
+        Segment energy.
+        
+        Result:
+            Segment energy.
+        """
+        
+        return self.watts * self.pue
         
 #-------------------------------------------------------------------------------    
 # Supercpmputer resources. 
@@ -650,7 +662,7 @@ class Resources:
                                 cpus =
                                 [
                                     (CPU.Intel_Xeon_X5675(), 2, 192),
-                                    (CPU.NVIDIA_Tesla_M2090(), 8, 48)
+                                    (CPU.NVIDIA_Tesla_M2090(), 2, 48)
                                 ]
                             ),
                             6
@@ -797,6 +809,31 @@ class Resources:
         
 #-------------------------------------------------------------------------------
 
+    def pt_cpu_ram(self):
+        """
+        CPU RAM properties tree.
+        
+        Result:
+            CPU RAM properties tree.
+        """
+        
+        return self.properties_tree(cpu_tuple_fun = lambda x: x[2] / x[1])        
+
+#-------------------------------------------------------------------------------
+
+    def pt_cpu_core_ram(self):
+        """
+        CPU core RAM properties tree.
+        
+        Result:
+            CPU core RAM properties tree.
+        """
+        
+        return jdfun.zip_div(self.pt_cpu_ram(),
+                             self.pt_cpu_cores_count())     
+
+#-------------------------------------------------------------------------------
+        
     def pt_node_cpus_count_m(self):
         """
         Properties tree on node cpus count.
@@ -976,7 +1013,8 @@ class Resources:
             Segment TFLOPS properties tree.
         """
 
-        return jdfun.zip_mul(self.pt_node_tfs(), self.pt_segment_nodes_count_m())
+        return jdfun.zip_mul(self.pt_node_tfs(),
+                             self.pt_segment_nodes_count_m())
 
 #-------------------------------------------------------------------------------
 
@@ -1017,6 +1055,43 @@ class Resources:
 
 #-------------------------------------------------------------------------------
 
+    def pt_segment_watts(self):
+        """
+        Segment watts properties tree.
+        
+        Result:
+            Segment watts properties tree.
+        """
+        
+        return self.properties_tree(segment_fun = lambda x: x.watts)
+
+#-------------------------------------------------------------------------------
+
+    def pt_segment_pue(self):
+        """
+        Segment PUE properties tree.
+        
+        Result:
+            Segment PUE properties tree.
+        """
+        
+        return self.properties_tree(segment_fun = lambda x: x.pue)
+
+#-------------------------------------------------------------------------------
+    
+    def pt_segment_energy(self):
+        """
+        Segment energy properties tree.
+        
+        Result:
+            Segment energy properties tree.
+        """
+        
+        return jdfun.zip_mul(self.pt_segment_watts(),
+                             self.pt_segment_pue())
+
+#-------------------------------------------------------------------------------
+        
     def tfs(self):
         """
         Resources tfs.
@@ -1077,6 +1152,18 @@ class Resources:
     
 #-------------------------------------------------------------------------------
 
+    def energy(self):
+        """
+        Energy.
+        
+        Result:
+            Energy.
+        """
+        
+        return jdfun.reduce_leafs_sum(self.pt_segment_energy())
+
+#-------------------------------------------------------------------------------
+
     def filter(self,
                segment_filter = jdfun.true_predct(),
                node_tuple_filter = jdfun.true_predct(),
@@ -1112,4 +1199,25 @@ class Resources:
         
         return r
 
-#-------------------------------------------------------------------------------        
+#-------------------------------------------------------------------------------
+
+    def segment(self, name):
+        """
+        Find segment.
+        
+        Arguments:
+            name -- segment name.
+            
+        Result:
+            Segment or None.
+        """
+        
+        # Check all segments.
+        for s in self.segments:
+            if s.name == name:
+                return s
+            
+        # Nothing is found.
+        return None
+
+#-------------------------------------------------------------------------------

@@ -21,8 +21,6 @@ class Money:
     Peace of money for financial manipulations.
     """
     
-    ten = 10            # Alias for 10.
-    hundred = 100       # Alias for 100.
     digits_in_group = 3 # Digits count in group when number represented 
                         # as "1 000 000" (three digits in this case).
     delim = " "         # Delimiter for parts of numerical value.
@@ -65,7 +63,7 @@ class Money:
         """
         
         # Store money value multiplied on 100 (in kopecks, cents, etc.).
-        self.amount = int(round(v * Money.hundred))
+        self.amount = int(round(v * ut.Consts.HUNDRED))
 
 #-------------------------------------------------------------------------------
 
@@ -88,6 +86,18 @@ class Money:
         
 #-------------------------------------------------------------------------------
 
+    def value(self):
+        """
+        Get float value of money.
+        
+        Result:
+            Value.
+        """
+        
+        return self.amount / ut.Consts.HUNDRED
+
+#-------------------------------------------------------------------------------
+        
     def hi(self):
         """
         High part of money (rubles, dollars, etc.).
@@ -97,9 +107,9 @@ class Money:
         """
         
         if self.amount < 0:
-            return -((-self.amount) // Money.hundred)
+            return -((-self.amount) // ut.Consts.HUNDRED)
         else:
-            return self.amount // Money.hundred
+            return self.amount // ut.Consts.HUNDRED
     
 #-------------------------------------------------------------------------------
 
@@ -112,9 +122,9 @@ class Money:
         """
         
         if self.amount < 0:
-            return (-self.amount) % Money.hundred
+            return (-self.amount) % ut.Consts.HUNDRED
         else:
-            return self.amount % Money.hundred
+            return self.amount % ut.Consts.HUNDRED
     
 #-------------------------------------------------------------------------------
 
