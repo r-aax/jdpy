@@ -14,6 +14,30 @@ from functools import reduce
 
 #-------------------------------------------------------------------------------
 
+def true_predct():
+    """
+    Generate true predicate.
+
+    Result:
+        True function.
+    """
+    
+    return lambda x: True
+
+#-------------------------------------------------------------------------------
+
+def false_predct():
+    """
+    Generate false predicate.
+    
+    Result:
+        False function.
+    """
+    
+    return lambda x: False
+
+#-------------------------------------------------------------------------------
+
 def is_all(a, pred):
     """
     Check all elements with predicate.

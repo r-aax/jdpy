@@ -360,6 +360,30 @@ class Node:
         return [fun(x) for x in self.cpus]
 
 #-------------------------------------------------------------------------------
+
+    def filter(self,
+               cpu_tuple_filter = jdfun.true_predct(),
+               cpu_filter = jdfun.true_predct()):
+        """
+        Filter function for segment.
+        
+        Arguments:
+            node_tuple_filter -- filter for node tuple,
+            node_filter -- function for nodes filter.
+            
+        Result:
+            New node object.
+        """
+        
+        # Final filter.
+        fun = lambda x: x[1] > 0 \
+                        and cpu_tuple_filter(x) \
+                        and cpu_filter(x[0])
+        self.cpus = list(filter(fun, self.cpus))
+        
+        return self
+
+#-------------------------------------------------------------------------------
 # Segment.
 #-------------------------------------------------------------------------------
 
@@ -548,6 +572,39 @@ class Segment:
                                              cpu_tuple_fun,
                                              cpu_fun)
         return [fun(x) for x in self.nodes]
+
+#-------------------------------------------------------------------------------    
+
+    def filter(self,
+               node_tuple_filter = jdfun.true_predct(),
+               node_filter = jdfun.true_predct(),
+               cpu_tuple_filter = jdfun.true_predct(),
+               cpu_filter = jdfun.true_predct()):
+        """
+        Filter function for segment.
+        
+        Arguments:
+            node_tuple_filter -- filter for node tuple,
+            node_filter -- function for nodes filter,
+            cpu_tuple_filter -- filter for CPU tuple,
+            cpu_filter -- function for CPUs filter.
+            
+        Result:
+            New node object.
+        """
+
+        # Filter from leafs.
+        fun = lambda x: (x[0].filter(cpu_tuple_filter, cpu_filter), x[1])
+        self.nodes = [fun(x) for x in self.nodes]
+
+        # Final filter.
+        fun = lambda x: x[0].cpus != [] \
+                        and x[1] > 0 \
+                        and node_tuple_filter(x) \
+                        and node_filter(x[0])
+        self.nodes = list(filter(fun, self.nodes))
+
+        return self
         
 #-------------------------------------------------------------------------------    
 # Supercpmputer resources. 
@@ -1007,4 +1064,38 @@ class Resources:
         return jdfun.reduce_leafs_sum(self.pt_segment_cores_count())    
     
 #-------------------------------------------------------------------------------
+
+    def filter(self,
+               segment_filter = jdfun.true_predct(),
+               node_tuple_filter = jdfun.true_predct(),
+               node_filter = jdfun.true_predct(),
+               cpu_tuple_filter = jdfun.true_predct(),
+               cpu_filter = jdfun.true_predct()):
+        """
+        Filter function for resources.
         
+        Arguments:
+            segment_filter -- function for segments filter,
+            node_tuple_filter -- filter for node tuple,
+            node_filter -- function for nodes filter,
+            cpu_tuple_filter -- filter for CPU tuple,
+            cpu_filter -- function for CPUs filter.
+            
+        Result:
+            New resources object.
+        """
+        
+        # Filter from leafs.
+        fun = lambda x: x.filter(node_tuple_filter,
+                                 node_filter,
+                                 cpu_tuple_filter,
+                                 cpu_filter)
+        self.segments = [fun(x) for x in self.segments]
+        
+        # Final filter.
+        fun = lambda x: (x.nodes != []) and segment_filter(x)
+        self.segments = list(filter(fun, self.segments))
+        
+        return self
+
+#-------------------------------------------------------------------------------        
