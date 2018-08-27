@@ -40,6 +40,22 @@ class CPU:
     
 #-------------------------------------------------------------------------------
 
+    def copy(self):
+        """
+        Copy.
+        
+        Result:
+            Copy.
+        """
+        
+        return CPU(name = self.name, 
+                   cores_count = self.cores_count, 
+                   freq = self.freq, 
+                   tfs = self.tfs, 
+                   is_acc = self.is_acc)
+
+#-------------------------------------------------------------------------------
+
     def __repr__(self):
         """
         String representation.
@@ -218,6 +234,20 @@ class Node:
 
 #-------------------------------------------------------------------------------
 
+    def copy(self):
+        """
+        Copy.
+        
+        Result:
+            Copy.
+        """
+
+        copy_cpu_tuple_fun = lambda x: (x[0].copy(), x[1], x[2])
+        return Node(name = self.name,
+                    cpus = [copy_cpu_tuple_fun(x) for x in self.cpus])
+
+#-------------------------------------------------------------------------------
+
     def MVS100K():
         """
         MVS-100K node.
@@ -375,13 +405,15 @@ class Node:
             New node object.
         """
         
+        r = self.copy()
+        
         # Final filter.
         fun = lambda x: x[1] > 0 \
                         and cpu_tuple_filter(x) \
                         and cpu_filter(x[0])
-        self.cpus = list(filter(fun, self.cpus))
+        r.cpus = list(filter(fun, r.cpus))
         
-        return self
+        return r
 
 #-------------------------------------------------------------------------------
 # Segment.
@@ -411,6 +443,22 @@ class Segment:
         self.watts = watts
         self.pue = pue
         
+#-------------------------------------------------------------------------------
+
+    def copy(self):
+        """
+        Copy.
+        
+        Result:
+            Copy.
+        """
+        
+        copy_node_tuple_fun = lambda x: (x[0].copy(), x[1])
+        return Segment(name = self.name,
+                       nodes = [copy_node_tuple_fun(x) for x in self.nodes],
+                       watts = self.watts,
+                       pue = self.pue)
+
 #-------------------------------------------------------------------------------
 
     def MVS100K():
@@ -593,18 +641,20 @@ class Segment:
             New node object.
         """
 
+        r = self.copy()
+
         # Filter from leafs.
         fun = lambda x: (x[0].filter(cpu_tuple_filter, cpu_filter), x[1])
-        self.nodes = [fun(x) for x in self.nodes]
+        r.nodes = [fun(x) for x in r.nodes]
 
         # Final filter.
         fun = lambda x: x[0].cpus != [] \
                         and x[1] > 0 \
                         and node_tuple_filter(x) \
                         and node_filter(x[0])
-        self.nodes = list(filter(fun, self.nodes))
+        r.nodes = list(filter(fun, r.nodes))
 
-        return self
+        return r
         
 #-------------------------------------------------------------------------------    
 # Supercpmputer resources. 
@@ -629,6 +679,19 @@ class Resources:
         
         self.name = name
         self.segments = segments
+
+#-------------------------------------------------------------------------------
+
+    def copy(self):
+        """
+        Copy.
+        
+        Result:
+            Copy.
+        """
+
+        return Resources(name = self.name,
+                         segments = [x.copy() for x in self.segments])
 
 #-------------------------------------------------------------------------------
 
@@ -976,7 +1039,7 @@ class Resources:
             Segment TFLOPS properties tree.
         """
         
-        return jdfun.reduce_leafs_sum(self.pt_segment_tfs_m)
+        return jdfun.reduce_leafs_sum(self.pt_segment_tfs_m())
 
 #-------------------------------------------------------------------------------
         
@@ -1085,17 +1148,19 @@ class Resources:
             New resources object.
         """
         
+        r = self.copy()
+        
         # Filter from leafs.
         fun = lambda x: x.filter(node_tuple_filter,
                                  node_filter,
                                  cpu_tuple_filter,
                                  cpu_filter)
-        self.segments = [fun(x) for x in self.segments]
+        r.segments = [fun(x) for x in r.segments]
         
         # Final filter.
         fun = lambda x: (x.nodes != []) and segment_filter(x)
-        self.segments = list(filter(fun, self.segments))
+        r.segments = list(filter(fun, r.segments))
         
-        return self
+        return r
 
 #-------------------------------------------------------------------------------        
