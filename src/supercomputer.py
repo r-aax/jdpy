@@ -71,7 +71,7 @@ class CPU:
 
 #-------------------------------------------------------------------------------
 
-    def HT():
+    def Intel_Xeon_E5450():
         """
         Harpertown microprocessor (Intel Xeon E5450).
         
@@ -79,11 +79,12 @@ class CPU:
             Harpertown microprocessor.
         """
         
-        return CPU("HT", cores_count = 4, freq = 3.0, tfs = 0.048)
+        return CPU("Intel Xeon E5450 Harpertown",
+                   cores_count = 4, freq = 3.0, tfs = 0.048)
 
 #-------------------------------------------------------------------------------
 
-    def IB():
+    def Intel_Xeon_E5_2667():
         """
         Ivy Bridge microprocessor (Intel Xeon E5-2667).
         
@@ -91,11 +92,12 @@ class CPU:
             Ivy Bridge microprocessor.
         """
         
-        return CPU("IB", cores_count = 8, freq = 3.3, tfs = 0.2112)
+        return CPU("Intel Xeon E5-2667 Ivy Bridge",
+                   cores_count = 8, freq = 3.3, tfs = 0.2112)
 
 #-------------------------------------------------------------------------------
 
-    def KNC_ps():
+    def Intel_Xeon_Phi_7120D():
         """
         Knights Corner microprocessor in Petastream (Intel Xeon Phi 7120D).
         
@@ -103,12 +105,13 @@ class CPU:
             Knights Corner microprocessor.
         """
         
-        return CPU("KNC", cores_count = 61, freq = 1.238, tfs = 1.208,
+        return CPU("Intel Xeon Phi 7120D KNC",
+                   cores_count = 61, freq = 1.238, tfs = 1.208,
                    is_acc = True)
 
 #-------------------------------------------------------------------------------
 
-    def SB():
+    def Intel_Xeon_E5_2690():
         """
         Sandy Bridge microprocessor (Intel Xeon E5-2690).
         
@@ -116,11 +119,12 @@ class CPU:
             Sandy Bridge microprocessor.
         """
         
-        return CPU("SB", cores_count = 8, freq = 2.9, tfs = 0.1856)
+        return CPU("Intel Xeon E5-2690 Sandy Bridge",
+                   cores_count = 8, freq = 2.9, tfs = 0.1856)
 
 #-------------------------------------------------------------------------------
 
-    def KNC_tr():
+    def Intel_Xeon_Phi_7110X():
         """
         Knights Corner microprocessor in Tornado (Intel Xeon Phi 7110X).
         
@@ -128,12 +132,13 @@ class CPU:
             Knights Corner microprocessor.
         """
         
-        return CPU("KNC", cores_count = 61, freq = 1.1, tfs = 1.0736,
+        return CPU("Intel Xeon Phi 7110X KNC",
+                   cores_count = 61, freq = 1.1, tfs = 1.0736,
                    is_acc = True)
 
 #-------------------------------------------------------------------------------
 
-    def HW():
+    def Intel_Xeon_E5_2697v3():
         """
         Haswell microprocessor (Intel Xeon E5-2697v3).
         
@@ -141,11 +146,12 @@ class CPU:
             Haswell microprocessor.
         """
         
-        return CPU("HW", cores_count = 14, freq = 2.6, tfs = 0.5824)
+        return CPU("Intel Xeon E5-2697v3 Haswell",
+                   cores_count = 14, freq = 2.6, tfs = 0.5824)
 
 #-------------------------------------------------------------------------------
 
-    def BW():
+    def Intel_Xeon_E5_2697Av4():
         """
         Broadwell microprocessor (Intel Xeon E5-2697Av4).
         
@@ -153,11 +159,12 @@ class CPU:
             Broadwell microprocessor.
         """
         
-        return CPU("BW", cores_count = 16, freq = 2.6, tfs = 0.6656)
+        return CPU("Intel Xeon E5-2697Av4 Broadwell",
+                   cores_count = 16, freq = 2.6, tfs = 0.6656)
     
 #-------------------------------------------------------------------------------
 
-    def KNL():
+    def Intel_Xeon_Phi_7290():
         """
         Knights Landing microprocessor (Intel Xeon Phi 7290).
         
@@ -165,11 +172,12 @@ class CPU:
             Knights Landing microprocessor.
         """
         
-        return CPU("KNL", cores_count = 72, freq = 1.5, tfs = 3.456)
+        return CPU("Intel Xeon Phi 7290 KNL",
+                   cores_count = 72, freq = 1.5, tfs = 3.456)
 
 #-------------------------------------------------------------------------------
 
-    def WM():
+    def Intel_Xeon_X5675():
         """
         Westmere microprocessor (Intel Xeon X5675).
         
@@ -177,11 +185,12 @@ class CPU:
             Westmere microprocessor.
         """
         
-        return CPU("WM", cores_count = 6, freq = 3.06, tfs = 0.14488)
+        return CPU("Intel Xeon X5675 Westmere",
+                   cores_count = 6, freq = 3.06, tfs = 0.14488)
 
 #-------------------------------------------------------------------------------
 
-    def Tesla():
+    def NVIDIA_Tesla_M2090():
         """
         Tesla microprocessor (NVIDIA Tesla M2090).
         
@@ -189,7 +198,8 @@ class CPU:
             Tesla microprocessor.
         """
         
-        return CPU("TL", cores_count = 512, freq = 1.3, tfs = 0.665,
+        return CPU("NVIDIA Tesla M2090",
+                   cores_count = 512, freq = 1.3, tfs = 0.665,
                    is_acc = True)
     
 #-------------------------------------------------------------------------------
@@ -245,97 +255,6 @@ class Node:
         copy_cpu_tuple_fun = lambda x: (x[0].copy(), x[1], x[2])
         return Node(name = self.name,
                     cpus = [copy_cpu_tuple_fun(x) for x in self.cpus])
-
-#-------------------------------------------------------------------------------
-
-    def MVS100K():
-        """
-        MVS-100K node.
-        
-        Result:
-            MVS-100K node.
-        """
-        
-        return Node("100K",
-                    cpus = [(CPU.HT(), 2, 8)])
-
-#-------------------------------------------------------------------------------
-
-    def Petastream():
-        """
-        Petastream node.
-        
-        Result:
-            Petastream node.
-        """
-        
-        return Node("Petastream",
-                    cpus = [(CPU.IB(), 1, 8), (CPU.KNC_ps(), 8, 16)])
-    
-#-------------------------------------------------------------------------------
-
-    def Tornado():
-        """
-        Tornado node.
-        
-        Result:
-            Tornado node.
-        """
-        
-        return Node("Tornado",
-                    cpus = [(CPU.SB(), 2, 64), (CPU.KNC_tr(), 2, 16)])
-
-#-------------------------------------------------------------------------------
-
-    def Haswell():
-        """
-        Haswell node.
-        
-        Result:
-            Haswell node.
-        """
-        
-        return Node("Haswell",
-                    cpus = [(CPU.HW(), 2, 128)])
-
-#-------------------------------------------------------------------------------
-
-    def Broadwell():
-        """
-        Broadwell node,
-        
-        Result:
-            Broadwell node.
-        """
-        
-        return Node("Broadwell",
-                    cpus = [(CPU.BW(), 2, 128)])
-
-#-------------------------------------------------------------------------------
-
-    def KNL():
-        """
-        KNL node.
-        
-        Result:
-            KNL node.
-        """
-        
-        return Node("KNL",
-                    cpus = [(CPU.KNL(), 1, 96)])
-
-#-------------------------------------------------------------------------------
-
-    def NVIDIA():
-        """
-        NVIDIA node.
-        
-        Result:
-            NVIDIA node.
-        """
-        
-        return Node("NVIDIA",
-                    cpus = [(CPU.WM(), 2, 192), (CPU.Tesla(), 8, 48)])
 
 #-------------------------------------------------------------------------------
 
@@ -458,111 +377,6 @@ class Segment:
                        nodes = [copy_node_tuple_fun(x) for x in self.nodes],
                        watts = self.watts,
                        pue = self.pue)
-
-#-------------------------------------------------------------------------------
-
-    def MVS100K():
-        """
-        MVS-100K segment.
-        
-        Result:
-            MVS-100K segment.
-        """
-        
-        return Segment("100K",
-                       nodes = [(Node.MVS100K(), 110)],
-                       watts = 36,
-                       pue = 2.0)
-
-#-------------------------------------------------------------------------------
-
-    def Petastream():
-        """
-        Petastream segment.
-        
-        Result:
-            Petastream segment.
-        """
-        
-        return Segment("Petastream",
-                       nodes = [(Node.Petastream(), 8)],
-                       watts = 15,
-                       pue = 1.25)
-    
-#-------------------------------------------------------------------------------
-
-    def Tornado():
-        """
-        Tornado segment.
-        
-        Result:
-            Tornado segment.
-        """
-        
-        return Segment("Tornado",
-                       nodes = [(Node.Tornado(), 207)],
-                       watts = 223,
-                       pue = 1.25)
-
-#-------------------------------------------------------------------------------
-
-    def Haswell():
-        """
-        Haswell segment.
-        
-        Result:
-            Haswell segment.
-        """
-        
-        return Segment("Haswell",
-                       nodes = [(Node.Haswell(), 42)],
-                       watts = 28,
-                       pue = 1.06)
-
-#-------------------------------------------------------------------------------
-
-    def Broadwell():
-        """
-        Broadwell segment,
-        
-        Result:
-            Broadwell segment.
-        """
-        
-        return Segment("Broadwell",
-                       nodes = [(Node.Broadwell(), 136)],
-                       watts = 91,
-                       pue = 1.06)
-
-#-------------------------------------------------------------------------------
-
-    def KNL():
-        """
-        KNL segment.
-        
-        Result:
-            KNL segment.
-        """
-        
-        return Segment("KNL",
-                       nodes = [(Node.KNL(), 38)],
-                       watts = 29,
-                       pue = 1.06)
-
-#-------------------------------------------------------------------------------
-
-    def NVIDIA():
-        """
-        NVIDIA segment.
-        
-        Result:
-            NVIDIA segment.
-        """
-        
-        return Segment("NVIDIA",
-                       nodes = [(Node.NVIDIA(), 6)],
-                       watts = 19,
-                       pue = 2.0)
 
 #-------------------------------------------------------------------------------
 
@@ -703,14 +517,149 @@ class Resources:
             Supercomputers of Joint supercomputer center.
         """
         
-        return Resources("JSCC",
-                         [Segment.MVS100K(),
-                          Segment.Petastream(),
-                          Segment.Tornado(),
-                          Segment.Haswell(),
-                          Segment.Broadwell(),
-                          Segment.KNL(),
-                          Segment.NVIDIA()])
+        return Resources \
+        (
+            name = "JSCC",
+            segments =
+            [
+                Segment
+                (
+                    name = "100K",
+                    nodes =
+                    [
+                        (
+                            Node
+                            (
+                                name = "100K",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_E5450(), 2, 8)
+                                ]
+                            ),
+                            110
+                        )
+                    ],
+                    watts = 36, pue = 2.0
+                ),
+                Segment
+                (
+                    name = "Petastream",
+                    nodes =
+                    [
+                        (
+                            Node
+                            (
+                                name = "Petastream",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_E5_2667(), 1, 8),
+                                    (CPU.Intel_Xeon_Phi_7120D(), 8, 16)
+                                ]
+                            ),
+                            8
+                        )
+                    ],
+                    watts = 15, pue = 1.25
+                ),
+                Segment
+                (
+                    name = "Tornado",
+                    nodes =
+                    [
+                        (
+                            Node
+                            (
+                                name = "Tornado",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_E5_2690(), 2, 64),
+                                    (CPU.Intel_Xeon_Phi_7110X(), 2, 16)
+                                ]
+                            ),
+                            207
+                        )
+                    ],
+                    watts = 223, pue = 1.25
+                ),
+                Segment
+                (
+                    name = "Haswell",
+                    nodes =
+                    [
+                        (
+                            Node
+                            (
+                                name = "Haswell",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_E5_2697v3(), 2, 128)
+                                ]
+                            ),
+                            42
+                        )
+                    ],
+                    watts = 28, pue = 1.06
+                ),
+                Segment
+                (
+                    name = "Broadwell",
+                    nodes = 
+                    [
+                        (
+                            Node
+                            (
+                                name = "Broadwell",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_E5_2697Av4(), 2, 128)
+                                ]
+                            ),
+                            136
+                        )
+                    ],
+                    watts = 91, pue = 1.06
+                ),
+                Segment
+                (
+                    name = "KNL",
+                    nodes =
+                    [
+                        (
+                            Node
+                            (
+                                name = "KNL",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_Phi_7290(), 1, 96)
+                                ]
+                            ),
+                            38
+                        )
+                    ],
+                    watts = 29, pue = 1.06
+                ),
+                Segment
+                (
+                    name = "NVIDIA",
+                    nodes =
+                    [
+                        (
+                            Node
+                            (
+                                name = "NVIDIA",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_X5675(), 2, 192),
+                                    (CPU.NVIDIA_Tesla_M2090(), 8, 48)
+                                ]
+                            ),
+                            6
+                        )
+                    ],
+                    watts = 19, pue = 2.0
+                )
+            ]
+        )
 
 #-------------------------------------------------------------------------------
 
