@@ -84,6 +84,33 @@ class CPU:
 
 #-------------------------------------------------------------------------------
 
+    def Intel_Xeon_E5630():
+        """
+        Westmere microprocessor (Intel Xeon E5630).
+        
+        Result:
+            Westmere microprocessor.
+        """
+        
+        return CPU("Intel Xeon E5630 Westmere",
+                   cores_count = 4, freq = 2.53, tfs = 0.08)
+
+#-------------------------------------------------------------------------------
+
+    def Intel_Xeon_E7650():
+        """
+         microprocessor (Intel Xeon E7650).
+        
+        Result:
+             microprocessor.
+        """
+        
+        # Warning. I don't know peak performance of this processor.
+        return CPU("Intel Xeon E7650 ",
+                   cores_count = 8, freq = 2.26, tfs = 0.0)
+
+#-------------------------------------------------------------------------------
+
     def Intel_Xeon_E5_2667():
         """
         Ivy Bridge microprocessor (Intel Xeon E5-2667).
@@ -97,20 +124,6 @@ class CPU:
 
 #-------------------------------------------------------------------------------
 
-    def Intel_Xeon_Phi_7120D():
-        """
-        Knights Corner microprocessor in Petastream (Intel Xeon Phi 7120D).
-        
-        Result:
-            Knights Corner microprocessor.
-        """
-        
-        return CPU("Intel Xeon Phi 7120D KNC",
-                   cores_count = 61, freq = 1.238, tfs = 1.208,
-                   is_acc = True)
-
-#-------------------------------------------------------------------------------
-
     def Intel_Xeon_E5_2690():
         """
         Sandy Bridge microprocessor (Intel Xeon E5-2690).
@@ -121,20 +134,6 @@ class CPU:
         
         return CPU("Intel Xeon E5-2690 Sandy Bridge",
                    cores_count = 8, freq = 2.9, tfs = 0.1856)
-
-#-------------------------------------------------------------------------------
-
-    def Intel_Xeon_Phi_7110X():
-        """
-        Knights Corner microprocessor in Tornado (Intel Xeon Phi 7110X).
-        
-        Result:
-            Knights Corner microprocessor.
-        """
-        
-        return CPU("Intel Xeon Phi 7110X KNC",
-                   cores_count = 61, freq = 1.1, tfs = 1.0736,
-                   is_acc = True)
 
 #-------------------------------------------------------------------------------
 
@@ -161,19 +160,32 @@ class CPU:
         
         return CPU("Intel Xeon E5-2697Av4 Broadwell",
                    cores_count = 16, freq = 2.6, tfs = 0.6656)
-    
+
 #-------------------------------------------------------------------------------
 
-    def Intel_Xeon_Phi_7290():
+    def Intel_Xeon_X5570():
         """
-        Knights Landing microprocessor (Intel Xeon Phi 7290).
+        Nehalem microprocessor (Intel Xeon X5570).
         
         Result:
-            Knights Landing microprocessor.
+            Nehalem microprocessor.
         """
         
-        return CPU("Intel Xeon Phi 7290 KNL",
-                   cores_count = 72, freq = 1.5, tfs = 3.456)
+        return CPU("Intel Xeon X5570 Nehalem",
+                   cores_count = 4, freq = 2.93, tfs = 0.0493)
+
+#-------------------------------------------------------------------------------
+
+    def Intel_Xeon_X5670():
+        """
+        Westmere microprocessor (Intel Xeon X5675).
+        
+        Result:
+            Westmere microprocessor.
+        """
+        
+        return CPU("Intel Xeon X5675 Westmere",
+                   cores_count = 6, freq = 2.93, tfs = 0.1387)
 
 #-------------------------------------------------------------------------------
 
@@ -190,6 +202,87 @@ class CPU:
 
 #-------------------------------------------------------------------------------
 
+    def Intel_Xeon_Gold_6126():
+        """
+        Skylake microprocessor (Intel Xeon Gold 6126).
+        
+        Result:
+            Skylake microprocessor.
+        """
+        
+        return CPU("Intel Xeon Gold 6126 Skylake",
+                   cores_count = 12, freq = 2.6, tfs = 0.9984);
+
+#-------------------------------------------------------------------------------
+
+    def Intel_Xeon_Phi_7120D():
+        """
+        Knights Corner microprocessor in Petastream (Intel Xeon Phi 7120D).
+        
+        Result:
+            Knights Corner microprocessor.
+        """
+        
+        return CPU("Intel Xeon Phi 7120D KNC",
+                   cores_count = 61, freq = 1.238, tfs = 1.208,
+                   is_acc = True)
+
+#-------------------------------------------------------------------------------
+
+    def Intel_Xeon_Phi_7110X():
+        """
+        Knights Corner microprocessor in Tornado (Intel Xeon Phi 7110X).
+        
+        Result:
+            Knights Corner microprocessor.
+        """
+        
+        return CPU("Intel Xeon Phi 7110X KNC",
+                   cores_count = 61, freq = 1.1, tfs = 1.0736,
+                   is_acc = True)
+    
+#-------------------------------------------------------------------------------
+
+    def Intel_Xeon_Phi_7230():
+        """
+        Knights Landing microprocessor (Intel Xeon Phi 7230).
+        
+        Result:
+            Knights Landing microprocessor.
+        """
+        
+        return CPU("Intel Xeon Phi 7230 KNL",
+                   cores_count = 64, freq = 1.3, tfs = 2.6624)
+
+#-------------------------------------------------------------------------------
+
+    def Intel_Xeon_Phi_7290():
+        """
+        Knights Landing microprocessor (Intel Xeon Phi 7290).
+        
+        Result:
+            Knights Landing microprocessor.
+        """
+        
+        return CPU("Intel Xeon Phi 7290 KNL",
+                   cores_count = 72, freq = 1.5, tfs = 3.456)
+
+#-------------------------------------------------------------------------------
+        
+    def NVIDIA_Tesla_X2070():
+        """
+        Tesla microprocessor (NVIDIA Tesla X2070).
+        
+        Result:
+            Tesla microprocessor.
+        """
+        
+        return CPU("NVIDIA Tesla X2070",
+                   cores_count = 512, freq = 0.65, tfs = 0.6656,
+                   is_acc = True)
+
+#-------------------------------------------------------------------------------
+        
     def NVIDIA_Tesla_M2090():
         """
         Tesla microprocessor (NVIDIA Tesla M2090).
@@ -204,6 +297,47 @@ class CPU:
     
 #-------------------------------------------------------------------------------
 
+    def NVIDIA_Tesla_K40M():
+        """
+        Tesla microprocessor (NVIDIA Tesla K40M).
+        
+        Result:
+            Tesla microprocessor.
+        """
+        
+        return CPU("NVIDIA Tesla K40M",
+                   cores_count = 960, freq = 0.667, tfs = 1.43,
+                   is_acc = True)
+
+#-------------------------------------------------------------------------------
+
+    def NVIDIA_Tesla_P100():
+        """
+        Pascal microprocessor (NVIDIA P100).
+        
+        Result:
+            Tesla microprocessor.
+        """
+        
+        return CPU("NVIDIA Tesla P100",
+                   cores_count = 1792, freq = 1.328, tfs = 5.3,
+                   is_acc = True)
+
+#-------------------------------------------------------------------------------
+
+    def PowerXCell_8i():
+        """
+        PowerXCell 8i microprocessor.
+        
+        Result:
+            PowerXCell 8i microprocessor.
+        """
+        
+        return CPU("PowerXCell 8i",
+                   cores_count = 8, freq = 3.2, tfs = 0.1024);
+
+#-------------------------------------------------------------------------------
+        
     def single_property(self, cpu_fun):
         """
         Single property.
@@ -345,7 +479,7 @@ class Segment:
     
 #-------------------------------------------------------------------------------
 
-    def __init__(self, name, nodes, watts, pue):
+    def __init__(self, name, nodes, watts = None, pue = None):
         """
         Constructor.
         
@@ -521,12 +655,193 @@ class Resources:
 
 #-------------------------------------------------------------------------------
 
-    def JSCC():
+    def MSU():
         """
-        Joint supercomputer center supercomputers.
+        Moscow State University supercomputers.
         
         Result:
-            Supercomputers of Joint supercomputer center.
+            Supercomputers of Moscow State University.
+        """
+        
+        return Resources \
+        (
+            name = "MSU",
+            segments =
+            [
+                Segment
+                (
+                    name = "Ломоносов-2",
+                    nodes =
+                    [
+                        (
+                            Node
+                            (
+                                name = "Compute",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_E5_2697v3(), 1, 64),
+                                    (CPU.NVIDIA_Tesla_K40M(), 1, 0)
+                                ]
+                            ),
+                            1120                            
+                        ),
+                        (
+                            Node
+                            (
+                                name = "low_io",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_E5_2697v3(), 1, 64),
+                                    (CPU.NVIDIA_Tesla_K40M(), 1, 0)
+                                ]
+                            ),
+                            384
+                        ),
+                        (
+                            Node
+                            (
+                                name = "Test",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_E5_2697v3(), 1, 64),
+                                    (CPU.NVIDIA_Tesla_K40M(), 1, 0)
+                                ]
+                            ),
+                            32
+                        ),
+                        (
+                            Node
+                            (
+                                name = "Pascal",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_Gold_6126(), 1, 96),
+                                    (CPU.NVIDIA_Tesla_P100(), 2, 32)
+                                ]
+                            ),
+                            160
+                        ),
+                        (
+                            Node
+                            (
+                                name = "Phi",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_Phi_7230(), 1, 112)
+                                ]
+                            ),
+                            4
+                        )
+                    ]
+                ),
+                Segment
+                (
+                    name = "Ломоносов",
+                    nodes =
+                    [
+                        (
+                            Node
+                            (
+                                name = "A",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_X5570(), 2, 12)
+                                ]
+                            ),
+                            4160
+                        ),
+                        (
+                            Node
+                            (
+                                name = "B",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_E5630(), 2, 12),
+                                    (CPU.NVIDIA_Tesla_X2070(), 2, 0)
+                                ]
+                            ),
+                            777
+                        ),
+                        (
+                            Node
+                            (
+                                name = "C",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_X5670(), 2, 24)
+                                ]
+                            ),
+                            640
+                        ),
+                        (
+                            Node
+                            (
+                                name = "D",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_E5630(), 2, 24),
+                                    (CPU.NVIDIA_Tesla_X2070(), 2, 0)
+                                ]
+                            ),
+                            288
+                        ),
+                        (
+                            Node
+                            (
+                                name = "E",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_X5570(), 2, 24)
+                                ]
+                            ),
+                            260
+                        ),
+                        (
+                            Node
+                            (
+                                name = "F",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_X5670(), 2, 48)
+                                ]
+                            ),
+                            40
+                        ),
+                        (
+                            Node
+                            (
+                                name = "G",
+                                cpus =
+                                [
+                                    (CPU.PowerXCell_8i(), 2, 16)
+                                ]
+                            ),
+                            30
+                        ),
+                        (
+                            Node
+                            (
+                                name = "H",
+                                cpus =
+                                [
+                                    (CPU.Intel_Xeon_E7650(), 4, 512)
+                                ]
+                            ),
+                            4
+                        ),
+                    ]
+                )
+            ]
+        )
+
+#-------------------------------------------------------------------------------
+
+    def JSCC():
+        """
+        Joint Supercomputer Center supercomputers.
+        
+        Result:
+            Supercomputers of Joint Supercomputer Center.
         """
         
         return Resources \
@@ -1104,6 +1419,30 @@ class Resources:
         
 #-------------------------------------------------------------------------------
 
+    def acc_tfs(self):
+        """
+        Performance only on accelerators.
+        
+        Result:
+            Accelerators performance.
+        """
+        
+        return self.filter(cpu_filter = lambda x: x.is_acc).tfs()
+
+#-------------------------------------------------------------------------------
+
+    def no_acc_tfs(self):
+        """
+        Performance only not on accelerators.
+        
+        Result:
+            Not accelerators performance.
+        """
+        
+        return self.filter(cpu_filter = lambda x: not x.is_acc).tfs()
+
+#-------------------------------------------------------------------------------
+        
     def ram(self):
         """
         RAM.
