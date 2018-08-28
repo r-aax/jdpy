@@ -216,6 +216,44 @@ def li_rnd_01(n):
     return [] if n == 0 else [random.random()] + li_rnd_01(n - 1)
 
 #-------------------------------------------------------------------------------
+
+def li_chop(s, size = 1):
+    """
+    Chop list or string.
+    
+    Arguments:
+        s -- string,
+        size -- chop size (if size is positive then the string is chopped
+                from the beginning to its end, if size is negative then the
+                string is chopped from the end to its beginning).
+    
+    Result:
+        List of chunks - chopped list.
+    
+    Examples:
+        li_chop("123456789", 4) -> ["1234", "5678", "9"]
+        li_chop("123456789", -4) -> ["1", "2345", "6789"]
+    """
+    
+    if len(s) <= abs(size):
+        # The string is too short to chop.
+        return [s]
+    
+    if size > 0:
+        # Positive chop size - chop from its head.
+        r = li_chop(s[size : ], size)
+        r.insert(0, s[ : size])
+        return r
+    elif size < 0:
+        # Negative chop size - chop from its end.
+        r = li_chop(s[: size], size)
+        r.append(s[size : ])
+        return r
+    else:
+        # Chop size must not be zero.
+        raise ValueError("Zero chop size.")
+
+#-------------------------------------------------------------------------------
 # Numpy arrays (names start with npa_*).    
 #-------------------------------------------------------------------------------
     
@@ -231,46 +269,6 @@ def npa_norm(a):
     """
 
     return a / sum(a)
-
-#-------------------------------------------------------------------------------
-# Strings (names start with str_*).
-#-------------------------------------------------------------------------------
-
-def str_chop(s, size = 1):
-    """
-    Chop string.
-    
-    Arguments:
-        s -- string,
-        size -- chop size (if size is positive then the string is chopped
-                from the beginning to its end, if size is negative then the
-                string is chopped from the end to its beginning).
-    
-    Result:
-        List of chunks - chopped string.
-    
-    Examples:
-        str_chop("123456789", 4) -> ["1234", "5678", "9"]
-        str_chop("123456789", -4) -> ["1", "2345", "6789"]
-    """
-    
-    if len(s) <= abs(size):
-        # The string is too short to chop.
-        return [s]
-    
-    if size > 0:
-        # Positive chop size - chop from its head.
-        r = str_chop(s[size : ], size)
-        r.insert(0, s[ : size])
-        return r
-    elif size < 0:
-        # Negative chop size - chop from its end.
-        r = str_chop(s[: size], size)
-        r.append(s[size : ])
-        return r
-    else:
-        # Chop size must not be zero.
-        raise ValueError("Zero chop size.")
         
 #-------------------------------------------------------------------------------
 # Tests.
@@ -280,15 +278,12 @@ if __name__ == "__main__":
     assert li_merge([1, 1], [2, 2]) == [1, 2, 1, 2], "li_merge fault 01"
     assert li_merge([1], [2, 2, 2]) == [1, 2, 2, 2], "li_merge fault 02"
     assert li_merge([1, 1, 1], [2]) == [1, 2, 1, 1], "li_merge fault 03"
+    #
     assert li_flatten([[1]]) == [1], "li_flatten fault 01"
     assert li_flatten([1, [2, 3]]) == [1, 2, 3], "li__flatten fault 02"
-    assert li_zip([1, [2, 3]],
-                  [4, [5, 6]],
-                  lambda x, y: x + y) == [5, [7, 9]], "li_zip fault 01"
-    assert li_zip([[3]], [[4]], lambda x, y: x * y) == [[12]], "li_zip fault 02"
     #
-    assert str_chop("123456789", 4) == ["1234", "5678", "9"], "str_chop fault 01"
-    assert str_chop("123456789", -4) == ["1", "2345", "6789"], "str_chop fault 02"
+    assert li_chop("123456789", 4) == ["1234", "5678", "9"], "li_chop fault 01"
+    assert li_chop("123456789", -4) == ["1", "2345", "6789"], "li_chop fault 02"
 
 #-------------------------------------------------------------------------------
         
