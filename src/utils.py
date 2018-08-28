@@ -8,6 +8,7 @@ Created on Mon Jul  2 15:34:59 2018
 """
 
 import numpy as np
+import random
 from functools import reduce
 
 #-------------------------------------------------------------------------------
@@ -32,8 +33,57 @@ class Consts:
     YEAR_HOURS     = YEAR_DAYS * DAY_HOURS # Hours count in a year
     HOUR_MINUTES   =  60                   # Minutes count in a hour.
     MINUTE_SECONDS =  60                   # Seconds count in a minute.
-    
 
+#-------------------------------------------------------------------------------
+# Counter.
+#-------------------------------------------------------------------------------
+
+class Cnt:
+    """
+    Class for counter.
+    """
+
+#-------------------------------------------------------------------------------
+
+    def __init__(self):
+        """
+        Constructor.
+        """
+        
+        self.v = 0
+
+#-------------------------------------------------------------------------------
+
+    def inc(self, inc = 1):
+        """
+        Increment value.
+        
+        Arguments:
+            inc -- increment value.
+        """
+        
+        self.v += inc
+    
+#-------------------------------------------------------------------------------
+# General functions.
+#-------------------------------------------------------------------------------
+    
+def g_in_bounds(x, lo, hi):
+    """
+    Check if value is placed in bounds.
+    
+    Arguments:
+        x -- value,
+        lo -- low bound,
+        hi -- high bound.
+    
+    Result:
+        True -- is value is in bounds,
+        False -- otherwise.
+    """
+    
+    return (x >= lo) and (x <= hi)
+    
 #-------------------------------------------------------------------------------
 # Lists (names start with li_*).
 #-------------------------------------------------------------------------------
@@ -112,6 +162,58 @@ def li_is_flat(a):
     
     # General case.
     return not isinstance(a[0], list) and li_is_flat(a[1:])
+
+#-------------------------------------------------------------------------------
+
+def li_last(a):
+    """
+    Get last element of the list.
+    
+    Arguments:
+        a -- list.
+        
+    Result:
+        The last element.
+    """
+    
+    return None if a == [] else a[len(a) - 1]
+
+#-------------------------------------------------------------------------------
+
+def li_sort_uniq(a):
+    """
+    Sort list and get only unique values.
+    
+    Arguments:
+        a -- list.
+        
+    Result:
+        Sorted list with only unique values.
+    """
+    
+    # Empty list.
+    if a == []:
+        return []
+    
+    # First sort the list.
+    s = sorted(a)
+    
+    return reduce(lambda r, e: r if li_last(r) == e else r + [e], s[1:], [s[0]])
+
+#-------------------------------------------------------------------------------
+
+def li_rnd_01(n):
+    """
+    Random list  with values from 0 to 1.
+    
+    Arguments:
+        n -- list length.
+        
+    Result:
+        Random list.
+    """
+    
+    return [] if n == 0 else [random.random()] + li_rnd_01(n - 1)
 
 #-------------------------------------------------------------------------------
 # Numpy arrays (names start with npa_*).    
