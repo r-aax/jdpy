@@ -213,7 +213,7 @@ def li_rnd_01(n):
         Random list.
     """
     
-    return [] if n == 0 else [random.random()] + li_rnd_01(n - 1)
+    return [random.random() for x in range(0, n)]
 
 #-------------------------------------------------------------------------------
 
@@ -235,23 +235,31 @@ def li_chop(s, size = 1):
         li_chop("123456789", -4) -> ["1", "2345", "6789"]
     """
     
-    if len(s) <= abs(size):
-        # The string is too short to chop.
-        return [s]
+    # We neeed to rewrite this function because
+    # recursion causes core fault.
+
+    c = s
+    r = []
     
     if size > 0:
         # Positive chop size - chop from its head.
-        r = li_chop(s[size : ], size)
-        r.insert(0, s[ : size])
-        return r
+        while len(c) > size:
+            r.append(c[:size])
+            c = c[size:]
+        if c != []:
+            r.append(c)
     elif size < 0:
         # Negative chop size - chop from its end.
-        r = li_chop(s[: size], size)
-        r.append(s[size : ])
-        return r
+        while len(c) > -size:
+            r.insert(0, c[size:])
+            c = c[:size]
+        if c != []:
+            r.insert(0, c)            
     else:
         # Chop size must not be zero.
         raise ValueError("Zero chop size.")
+
+    return r
 
 #-------------------------------------------------------------------------------
 # Numpy arrays (names start with npa_*).    

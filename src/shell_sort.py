@@ -8,6 +8,7 @@ Created on Tue Aug 28 13:44:47 2018
 import math
 import numpy as np
 import utils as ut
+import jdfun
 
 #-------------------------------------------------------------------------------
 # Functions for generating ds-sequence.
@@ -121,10 +122,33 @@ def ds_pratt(n):
     return list(filter(lambda x: x <= n // 2, su))[::-1]
 
 #-------------------------------------------------------------------------------
-    
-def shell(a, ds):
+
+def ds_fib(n):
     """
-    Shell sort.
+    Fibbonacci's ds sequence.
+    
+    Arguments:
+        n -- the length of array to be sorted.
+        
+    Result:
+        ds array.
+    """
+    
+    # Begin of fib list.
+    r = [1, 2]
+    
+    # Main loop.
+    while ut.li_last(r) < n:
+        r += [sum(r[-2:])]
+        
+    # Filter and return the result.
+    return list(filter(lambda x: x < n, r))[::-1]
+
+#-------------------------------------------------------------------------------
+
+def shell_stat(a, ds):
+    """
+    Shell sort statistics print.
     
     Arguments:
         a -- array,
@@ -136,10 +160,15 @@ def shell(a, ds):
     
     n = len(a)
     
-    # d-loop
-    for d in ds:
+    o_stats = []
+    v_stats = []
     
-        arr_d = []
+    # d-loop
+    for d in ds[:-1]:
+        
+        o_stat = 0
+        v_stat = 0
+        inner_lens = []
         
         # i-loop
         i = d
@@ -147,29 +176,43 @@ def shell(a, ds):
         
             t = a[i]
             
-            cnt_j = ut.Cnt()
+            inner_len = 0
             
             # j-loop
             j = i
             while j >= d:
-                
-                cnt_j.inc()
-                
-                if t < a[j - d]:
+
+                inner_len += 1
+                                
+                if t < a[j - d]:                    
                     a[j] = a[j - d]
                 else:
                     break
                 
                 j -= d
-                
-            arr_d += [cnt_j.v]
-                
+                                
             a[j] = t
-            i += 1  
+            i += 1
+            
+            o_stat += inner_len
+            inner_lens.append(inner_len)
+            if len(inner_lens) == min(16, d):
+                v_stat += max(inner_lens)
+                inner_lens = []
         
-        print(arr_d)
+        if (len(inner_lens) > 0):
+            v_stat += max(inner_lens)
+            inner_lens = []
         
-    # Result.
-    return a
+        o_stats.append(o_stat)
+        v_stats.append(v_stat)
+        
+    # Final print.
+#    print(o_stats)
+#    print(v_stats)
+#    print(jdfun.zip_div(o_stats, v_stats))
+    so = sum(o_stats)
+    sv = sum(v_stats)
+    print("so/sv/sp = ", so, sv, so / sv)
     
 #-------------------------------------------------------------------------------
